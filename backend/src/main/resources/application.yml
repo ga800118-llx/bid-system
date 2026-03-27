@@ -1,0 +1,32 @@
+﻿server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/douge_bid?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: douge
+    password: douge123456
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+app:
+  jwt:
+    secret: bid-system-jwt-secret-key-2024-very-long-and-secure
+    expiration: 86400000
+  upload:
+    path: ./uploads/
+  minimax:
+    api-key: d668d25b-3724-4b8c-b8a1-ba785bffe270
+    model: doubao-seed-2-0-pro-260215
+
