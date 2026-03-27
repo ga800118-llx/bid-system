@@ -8,7 +8,7 @@
 | ORM | MyBatis Plus | 3.5+ |
 | 安全认证 | JWT (jjwt) | 0.12+ |
 | 文档解析 | PDFBox + Apache POI | PDFBox 2.x / POI 5.x |
-| AI 集成 | MiniMax 豆包 API | doubao-seed-2-0-pro-260215 |
+| AI 集成 | MiniMax 官方 Token Plan API | MiniMax-M2.7 |
 | 前端框架 | Vue3 | 3.4+ |
 | 前端构建 | Vite | 5.x |
 | UI 组件 | Element Plus | 2.x |
