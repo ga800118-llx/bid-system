@@ -26,17 +26,15 @@ import org.apache.pdfbox.Loader;
 @Service
 public class MiniMaxExtractService {
 
-    // MiniMax 官方 API 地址（MiniMax-M2.7 模型）
-    private static final String API_URL = "https://api.minimax.chat/v1/text/chatcompletion_v2";
+    // MiniMax 官方 API 地址（Token Plan 接口）
+    private static final String API_URL = "https://api.minimaxi.com/v1/chat/completions";
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    // MiniMax Token Plan Key
-    private static final String API_KEY = "d668d25b-3724-4b8c-b8a1-ba785bffe270";
+    // MiniMax Token Plan Secret Key
+    private static final String API_KEY = "sk-cp-rw9VUdvhTcQQ1O7U2wk0lpGMTbZH04NVwLWrLKKmKCh18AqC8jcvfGMBbXMnAEhxD3TqWAAOVDMx_Pd5E27y-wu4lDjydZae_Q64B8VXs4gieBl_ZY-fYpI";
     // MiniMax-M2.7 推理模型
     private static final String MODEL = "MiniMax-M2.7";
 
     // 信息提取 Prompt
-    // 注意：MiniMax-M2.7 推理模型会先输出 reasoning_content（思考过程），
-    // 实际答案在 content 中，若 content 为空则从 reasoning_content 提取
     private static final String EXTRACT_PROMPT =
         "你是一个招投标文件信息提取专家。请从以下文本中提取结构化信息，返回标准JSON，只返回JSON不要其他内容。" +
         "字段列表：projectName(项目名称)、projectCode(项目编号)、biddingAgency(招标代理机构)、clientUnit(发标单位)、" +
@@ -115,7 +113,8 @@ public class MiniMaxExtractService {
         String resp = doPost(body);
         System.err.println("MiniMax vision response length: " + resp.length());
         JsonNode root = MAPPER.readTree(resp);
-        return parseJsonResponse(extractContent(root));
+        String content = extractContent(root);
+        return parseJsonResponse(content);
     }
 
     private Map<String, Object> callChatApi(String prompt) throws Exception {
@@ -131,6 +130,7 @@ public class MiniMaxExtractService {
         JsonNode root = MAPPER.readTree(resp);
         String content = extractContent(root);
 
+        // 保存原始响应供调试
         Files.writeString(
             Paths.get("C:/Users/Administrator/.openclaw/workspace/minimax_resp.txt"),
             content,
@@ -138,25 +138,46 @@ public class MiniMaxExtractService {
             StandardOpenOption.TRUNCATE_EXISTING
         );
 
-        if (content.startsWith("```")) {
-            int fn = content.indexOf(10);
-            int ln = content.lastIndexOf("```");
-            if (fn > 0 && ln > fn) content = content.substring(fn + 1, ln).trim();
-        }
+        // 去掉思考标签，提取实际JSON
+        // MiniMax-M2.7 返回格式：<think> 推理内容</think> {actual_json}
+        content = stripThinkingTags(content);
+
         return parseJsonResponse(content);
     }
 
     /**
-     * 从 MiniMax API 响应中提取 content。
-     * MiniMax-M2.7 为推理模型，若 message.content 为空，
-     * 则实际答案在 reasoning_content 中。
+     * 去掉 <think>...</think> 思考标签，提取标签后的纯 JSON
+     */
+    private String stripThinkingTags(String content) {
+        // 找最后一个 </think> 的位置，之后才是实际 JSON
+        int tagEnd = content.lastIndexOf("</think>");
+        if (tagEnd >= 0) {
+            content = content.substring(tagEnd + "</think>".length()).trim();
+        }
+        // 如果前面还有 <think> 开头的残留，也清理掉
+        int tagStart = content.indexOf("<think>");
+        if (tagStart >= 0 && tagStart < 20) {
+            content = content.substring(tagStart).trim();
+            tagEnd = content.lastIndexOf("</think>");
+            if (tagEnd >= 0) {
+                content = content.substring(tagEnd + "</think>".length()).trim();
+            }
+        }
+        // 去掉可能的 markdown 代码块
+        if (content.startsWith("```")) {
+            int fn = content.indexOf('\n');
+            int ln = content.lastIndexOf("```");
+            if (fn > 0 && ln > fn) content = content.substring(fn + 1, ln).trim();
+        }
+        return content;
+    }
+
+    /**
+     * 从 MiniMax API 响应中提取 content
      */
     private String extractContent(JsonNode root) {
         JsonNode msg = root.path("choices").path(0).path("message");
-        String content = msg.path("content").asText("").trim();
-        if (!content.isEmpty()) return content;
-        String reasoning = msg.path("reasoning_content").asText("").trim();
-        return reasoning;
+        return msg.path("content").asText("").trim();
     }
 
     private String doPost(Map<String, Object> body) throws Exception {
