@@ -1,82 +1,58 @@
 ﻿# 招投标管理系统
 
-## 项目结构
+[![GitHub Repo](https://img.shields.io/badge/GitHub-bid--system-blue.svg)](https://github.com/ga800118-llx/bid-system)
 
-```
-bid-system/
-├── backend/          # Spring Boot 后端
-│   ├── pom.xml
-│   ├── src/main/java/com/bid/system/
-│   │   ├── BidSystemApplication.java   # 启动类
-│   │   ├── config/                     # 配置类
-│   │   ├── controller/                 # 控制器
-│   │   ├── service/                     # 业务逻辑
-│   │   ├── mapper/                      # 数据访问
-│   │   ├── entity/                      # 实体类
-│   │   ├── dto/                         # 数据传输对象
-│   │   └── util/                        # 工具类
-│   └── uploads/                         # 文件存储目录
-└── frontend/         # Vue3 前端
-    ├── package.json
-    ├── vite.config.js
-    └── src/
-        ├── main.js
-        ├── App.vue
-        ├── api/                         # API 调用
-        ├── router/                      # 路由配置
-        └── views/                       # 页面组件
-```
+## 项目简介
 
-## 运行方式
+招投标信息管理系统，支持招标需求文档上传、AI 自动提取关键信息（项目名称、编号、开标时间、拦标价等）。
 
-### 后端（Java 17+）
+## 技术栈
 
-```bash
+**后端：** Java Spring Boot 3.2 + MyBatis Plus + JWT + PDFBox + POI  
+**前端：** Vue3 + Vite + Element Plus + Axios  
+**数据库：** MySQL（douge_bid）
+
+## 快速启动
+
+### 后端
+
+\\\ash
 cd backend
-# 确认 MySQL 中 douge_bid 数据库存在（users 和 projects 表已创建）
 mvn spring-boot:run
-```
+\\\
 
 ### 前端
 
-```bash
+\\\ash
 cd frontend
 npm install
 npm run dev
-```
+\\\
 
-前端访问: http://localhost:3000
-后端接口: http://localhost:8080
+## 文档规范
 
-## 数据库
+所有项目文档统一存放在 docs/ 目录：
 
-使用 `douge_bid` 数据库（MySQL），已有以下表：
+`
+docs/
+├── README.md                       # 文档总览
+├── 需求文档/                        # 甲方需求、需求确认书、原始文件
+│   └── 01_上传原始文件/             # 原始 PDF/Word（只读）
+├── 开发文档/                        # 技术方案、接口设计、数据库设计
+├── 测试文档/                        # 测试用例、测试报告
+└── 部署文档/                       # 安装部署、运维手册
+`
 
-- `users` - 用户表
-- `projects` - 项目表（14项提取字段）
+**命名规范：** 功能模块_日期_版本.md（如 登录模块_20260327_v1.md）
 
-## 功能说明
+## Git 提交规范
 
-- 用户注册登录（JWT认证）
-- 招标文件上传（PDF/Word），自动提取14项结构化信息
-- 按项目名称搜索
-- 项目详情查看 + 原始文件下载
-- 管理用户可上传文件和删除项目
-- 普通用户可搜索和查看
+- eat: 新功能
+- ix: 修复 Bug
+- docs: 文档变更
+- efactor: 重构
+- 	est: 测试相关
 
-## 14项提取字段
+## 远程仓库
 
-1. 项目名称
-2. 项目编号
-3. 招标代理机构
-4. 发标单位
-5. 开标时间
-6. 投诉质疑时间
-7. 拦标价（最高投标限价）
-8. 下限价（投标成本警戒线）
-9. 合同付款方式
-10. 专家的组成
-11. 价格分的评分方式
-12. 主观分分值
-13. 投标保证金
-14. 履约保证金
+https://github.com/ga800118-llx/bid-system
