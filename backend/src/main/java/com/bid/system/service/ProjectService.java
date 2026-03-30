@@ -88,8 +88,7 @@ public class ProjectService extends ServiceImpl<ProjectMapper, Project> {
         Files.createDirectories(uploadDir);
         Path filePath = uploadDir.resolve(savedFilename);
         file.transferTo(filePath.toFile());
-        String text = extractText(filePath.toFile(), suffix);
-        Map<String, Object> data = miniMaxExtractService.extractFromText(text);
+        Map<String, Object> data = miniMaxExtractService.extractFromFile(file);
         Project project = mapToProject(data);
         project.setFilePath(filePath.toString());
         project.setFileOriginalName(originalFilename);
