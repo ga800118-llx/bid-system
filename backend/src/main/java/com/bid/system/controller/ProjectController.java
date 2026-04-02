@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/project")
@@ -78,6 +80,25 @@ public class ProjectController {
                 .body(resource);
     }
 
+    @GetMapping("/download/{id}/markdown")
+    public ResponseEntity<Resource> downloadMarkdown(@PathVariable Long id, HttpServletRequest request) {
+        Project p = projectService.getDetail(id);
+        if (p == null || p.getMarkdownFilePath() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        File file = new File(p.getMarkdownFilePath());
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        Resource resource = new FileSystemResource(file);
+        String fileName = file.getName();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + fileName + "\"")
+                .contentType(MediaType.parseMediaType("text/markdown; charset=UTF-8"))
+                .body(resource);
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse delete(@PathVariable Long id, HttpServletRequest request) {
         String role = (String) request.getAttribute("role");
@@ -86,5 +107,20 @@ public class ProjectController {
         }
         projectService.removeById(id);
         return ApiResponse.success();
+    }
+    @PostMapping("/batch-delete")
+    public ApiResponse batchDelete(@RequestBody Map<String, Object> body, HttpServletRequest request) {
+        String role = (String) request.getAttribute("role");
+        if (!"admin".equals(role)) {
+            return ApiResponse.error(403, "\u65e0\u6743\u9650");
+        }
+        try {
+            @SuppressWarnings("unchecked")
+            List<Long> ids = (List<Long>) body.get("ids");
+            int count = projectService.batchDelete(ids);
+            return ApiResponse.success(count);
+        } catch (Exception e) {
+            return ApiResponse.error("\u6279\u91cf\u5220\u9664\u5931\u8d25: " + e.getMessage());
+        }
     }
 }

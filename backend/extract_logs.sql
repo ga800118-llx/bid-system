@@ -1,0 +1,1 @@
+﻿CREATE TABLE IF NOT EXISTS extract_logs (id BIGINT AUTO_INCREMENT PRIMARY KEY, file_name VARCHAR(500), extract_type VARCHAR(50), text_length INT, response_length INT, success BOOLEAN, error_message TEXT, duration_ms INT, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, INDEX idx_file_name (file_name), INDEX idx_created_at (created_at)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

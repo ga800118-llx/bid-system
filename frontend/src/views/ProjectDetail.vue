@@ -22,16 +22,26 @@
           <el-descriptions-item label="履约保证金">{{ project.performanceBond ? project.performanceBond + " 元" : "-" }}</el-descriptions-item>
           <el-descriptions-item label="合同付款方式" :span="2">{{ project.contractPayment || "-" }}</el-descriptions-item>
           <el-descriptions-item label="专家的组成" :span="2">{{ project.expertComposition || "-" }}</el-descriptions-item>
-          <el-descriptions-item label="价格分评分方式" :span="2">{{ project.priceScoreMethod || "-" }}</el-descriptions-item>
+          <el-descriptions-item label="价格分评分方法" :span="2">{{ project.priceScoreMethod || "-" }}</el-descriptions-item>
           <el-descriptions-item label="主观分分值" :span="2">{{ project.subjectiveScoreDetails || "-" }}</el-descriptions-item>
         </el-descriptions>
         <div class="file-section" v-if="project.fileOriginalName">
           <el-divider />
-          <h3>原始文件</h3>
-          <div class="file-info">
-            <el-icon><Document /></el-icon>
-            <span>{{ project.fileOriginalName }}</span>
-            <el-button type="primary" size="small" icon="Download" @click="handleDownload">下载</el-button>
+          <h3>文件信息</h3>
+          <div class="file-row">
+            <div class="file-info">
+              <el-icon><Document /></el-icon>
+              <span class="file-name">{{ project.fileOriginalName }}</span>
+              <el-button type="primary" size="small" icon="Download" @click="handleDownload">下载原始文件</el-button>
+            </div>
+          </div>
+          <div v-if="project.textLength || project.pageCount" class="stats-row">
+            <span v-if="project.pageCount">PDF 总页数：<strong>{{ project.pageCount }} 页</strong></span>
+            <span v-if="project.textLength">PDF 总字数：<strong>{{ project.textLength.toLocaleString() }} 字</strong></span>
+            <el-button type="info" size="small" icon="Document" @click="handleDownloadMarkdown" style="margin-left: auto">下载原文 Markdown</el-button>
+          </div>
+          <div v-else class="stats-row">
+            <el-button type="info" size="small" icon="Document" @click="handleDownloadMarkdown">下载原文 Markdown</el-button>
           </div>
         </div>
       </el-card>
@@ -66,6 +76,16 @@ const handleDownload = async () => {
     window.URL.revokeObjectURL(url)
   } catch { ElMessage.error("下载失败") }
 }
+const handleDownloadMarkdown = async () => {
+  try {
+    const res = await projectApi.downloadMarkdown(route.params.id)
+    const blob = new Blob([res], { type: "text/markdown;charset=utf-8" })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url; a.download = project.value.fileOriginalName.replace(/\.[^.]+$/, "_[MD.md]"); a.click()
+    window.URL.revokeObjectURL(url)
+  } catch { ElMessage.error("下载失败") }
+}
 const handleDelete = async () => {
   try {
     await ElMessageBox.confirm("确定删除此项目？此操作不可恢复。", "警告", { type: "warning" })
@@ -82,5 +102,8 @@ onMounted(fetchDetail)
 .content { max-width: 900px; margin: 0 auto; }
 .card-title { display: flex; align-items: center; gap: 12px; }
 .file-section { margin-top: 16px; }
+.file-row { display: flex; flex-direction: column; gap: 12px; }
 .file-info { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f5f7fa; border-radius: 4px; }
+.file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stats-row { display: flex; align-items: center; gap: 24px; padding: 12px; background: #f0f9ff; border-radius: 4px; margin-top: 8px; font-size: 14px; color: #606266; }
 </style>

@@ -1,34 +1,13 @@
-﻿import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue')
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: () => import('@/views/Register.vue')
-  },
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('@/views/Home.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/project/:id',
-    name: 'ProjectDetail',
-    component: () => import('@/views/ProjectDetail.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/admin',
-    name: 'Admin',
-    component: () => import('@/views/Admin.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true }
-  }
+  { path: '/login', name: 'Login', component: () => import('@/views/Login.vue') },
+  { path: '/register', name: 'Register', component: () => import('@/views/Register.vue') },
+  { path: '/', name: 'Home', component: () => import('@/views/Home.vue'), meta: { requiresAuth: true } },
+  { path: '/project/:id', name: 'ProjectDetail', component: () => import('@/views/ProjectDetail.vue'), meta: { requiresAuth: true } },
+  { path: '/admin', name: 'Admin', component: () => import('@/views/Admin.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/user', name: 'UserManage', component: () => import('@/views/UserManage.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/prompt', name: 'PromptConfig', component: () => import('@/views/PromptConfig.vue'), meta: { requiresAuth: true, requiresAdmin: true } }
 ]
 
 const router = createRouter({

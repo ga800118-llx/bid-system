@@ -1,4 +1,4 @@
-﻿server:
+server:
   port: 8080
 
 spring:
@@ -27,6 +27,10 @@ app:
   upload:
     path: ./uploads/
   minimax:
-    api-key: d668d25b-3724-4b8c-b8a1-ba785bffe270
-    model: doubao-seed-2-0-pro-260215
-
+    api-key: sk-cp-rw9VUdvhTcQQ1O7U2wk0lpGMTbZH04NVwLWrLKKmKCh18AqC8jcvfGMBbXMnAEhxD3TqWAAOVDMx_Pd5E27y-wu4lDjydZae_Q64B8VXs4gieBl_ZY-fYpI
+    api-url: https://api.minimax.chat
+    max-text-length: 250000
+  pdf-extract:
+    script: C:/UPQQ/pdf_extract.py
+  prompt-template:
+    path: C:/UPQQ/prompt_template.json

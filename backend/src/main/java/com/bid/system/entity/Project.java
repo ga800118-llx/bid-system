@@ -1,10 +1,6 @@
 package com.bid.system.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-
+import com.baomidou.mybatisplus.annotation.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,8 +15,8 @@ public class Project implements Serializable {
     private String projectCode;
     private String biddingAgency;
     private String clientUnit;
-    private LocalDateTime bidOpenTime;
-    private LocalDateTime complaintDeadline;
+    private String bidOpenTime;
+    private String complaintDeadline;
 
     private BigDecimal ceilingPrice;
 
@@ -33,11 +29,14 @@ public class Project implements Serializable {
 
     private BigDecimal bidBond;
 
-    private BigDecimal performanceBond;
+    private String performanceBond;
 
     private String filePath;
     private String fileOriginalName;
     private Long uploaderId;
+    private Integer textLength;
+    private Integer pageCount;
+    private String markdownFilePath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -51,10 +50,10 @@ public class Project implements Serializable {
     public void setBiddingAgency(String biddingAgency) { this.biddingAgency = biddingAgency; }
     public String getClientUnit() { return clientUnit; }
     public void setClientUnit(String clientUnit) { this.clientUnit = clientUnit; }
-    public LocalDateTime getBidOpenTime() { return bidOpenTime; }
-    public void setBidOpenTime(LocalDateTime bidOpenTime) { this.bidOpenTime = bidOpenTime; }
-    public LocalDateTime getComplaintDeadline() { return complaintDeadline; }
-    public void setComplaintDeadline(LocalDateTime complaintDeadline) { this.complaintDeadline = complaintDeadline; }
+    public String getBidOpenTime() { return bidOpenTime; }
+    public void setBidOpenTime(String bidOpenTime) { this.bidOpenTime = bidOpenTime; }
+    public String getComplaintDeadline() { return complaintDeadline; }
+    public void setComplaintDeadline(String complaintDeadline) { this.complaintDeadline = complaintDeadline; }
     public BigDecimal getCeilingPrice() { return ceilingPrice; }
     public void setCeilingPrice(BigDecimal ceilingPrice) { this.ceilingPrice = ceilingPrice; }
     public BigDecimal getFloorPrice() { return floorPrice; }
@@ -69,14 +68,20 @@ public class Project implements Serializable {
     public void setSubjectiveScoreDetails(String subjectiveScoreDetails) { this.subjectiveScoreDetails = subjectiveScoreDetails; }
     public BigDecimal getBidBond() { return bidBond; }
     public void setBidBond(BigDecimal bidBond) { this.bidBond = bidBond; }
-    public BigDecimal getPerformanceBond() { return performanceBond; }
-    public void setPerformanceBond(BigDecimal performanceBond) { this.performanceBond = performanceBond; }
+    public String getPerformanceBond() { return performanceBond; }
+    public void setPerformanceBond(String performanceBond) { this.performanceBond = performanceBond; }
     public String getFilePath() { return filePath; }
     public void setFilePath(String filePath) { this.filePath = filePath; }
     public String getFileOriginalName() { return fileOriginalName; }
     public void setFileOriginalName(String fileOriginalName) { this.fileOriginalName = fileOriginalName; }
     public Long getUploaderId() { return uploaderId; }
     public void setUploaderId(Long uploaderId) { this.uploaderId = uploaderId; }
+    public Integer getTextLength() { return textLength; }
+    public void setTextLength(Integer textLength) { this.textLength = textLength; }
+    public Integer getPageCount() { return pageCount; }
+    public void setPageCount(Integer pageCount) { this.pageCount = pageCount; }
+    public String getMarkdownFilePath() { return markdownFilePath; }
+    public void setMarkdownFilePath(String markdownFilePath) { this.markdownFilePath = markdownFilePath; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }

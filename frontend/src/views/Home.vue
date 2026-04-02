@@ -4,7 +4,9 @@
       <div class="header-left"><h2>招投标管理系统</h2></div>
       <div class="header-right">
         <span>欢迎，{{ username }}</span>
-        <el-tag v-if="role == 'admin'" type="warning" size="small">管理用户</el-tag>
+        <el-button v-if="role == 'admin'" type="primary" link @click="goUserManage">用户管理</el-button>
+        <el-button v-if="role == 'admin'" type="primary" link @click="goPromptConfig">Prompt配置</el-button>
+        <el-tag v-if="role == 'admin'" type="warning" size="small">管理员</el-tag>
         <el-tag v-else size="small">普通用户</el-tag>
         <el-button link @click="handleLogout">退出</el-button>
       </div>
@@ -17,21 +19,35 @@
         <el-button v-if="role == 'admin'" type="primary" icon="Upload" @click="goAdmin">上传招标文件</el-button>
       </div>
       <el-table :data="tableData" stripe style="width:100%" v-loading="loading">
+        <el-table-column label="序号" width="70" align="center">
+          <template #default="{ $index }">{{ (page - 1) * size + $index + 1 }}</template>
+        </el-table-column>
         <el-table-column prop="projectName" label="项目名称" min-width="200" />
         <el-table-column prop="projectCode" label="项目编号" width="180" />
         <el-table-column prop="clientUnit" label="发标单位" width="150" />
         <el-table-column prop="bidOpenTime" label="开标时间" width="160">
-          <template #default="{ row }">{{ row.bidOpenTime ? row.bidOpenTime.replace("T"," ").substring(0,16) : "-" }}</template>
+          <template #default="{ row }">{{ row.bidOpenTime ? row.bidOpenTime.replace('T',' ').substring(0,16) : "-" }}</template>
         </el-table-column>
         <el-table-column prop="ceilingPrice" label="拦标价(元)" width="120">
           <template #default="{ row }">{{ row.ceilingPrice ? row.ceilingPrice : "-" }}</template>
+        </el-table-column>
+        <el-table-column prop="createdAt" label="录入时间" width="160">
+          <template #default="{ row }">{{ row.createdAt ? row.createdAt.replace('T',' ').substring(0,16) : "-" }}</template>
         </el-table-column>
         <el-table-column label="操作" width="120" fixed="right">
           <template #default="{ row }"><el-button link type="primary" @click="goDetail(row.id)">查看详情</el-button></template>
         </el-table-column>
       </el-table>
       <div class="pagination">
-        <el-pagination v-model:current-page="page" :page-size="size" :total="total" layout="total, prev, pager, next" @current-change="fetchData" />
+        <el-pagination
+          v-model:current-page="page"
+          v-model:page-size="size"
+          :page-sizes="[10, 20, 50, 100]"
+          :total="total"
+          layout="sizes, total, prev, pager, next"
+          @size-change="handleSizeChange"
+          @current-change="fetchData"
+        />
       </div>
     </div>
   </div>
@@ -46,7 +62,7 @@ const username = localStorage.getItem("username") || "用户"
 const role = localStorage.getItem("role") || "user"
 const keyword = ref("")
 const page = ref(1)
-const size = ref(10)
+const size = ref(50)
 const total = ref(0)
 const loading = ref(false)
 const tableData = ref([])
@@ -57,8 +73,11 @@ const fetchData = async () => {
     if (res.code === 200) { tableData.value = res.data.records; total.value = res.data.total }
   } catch { ElMessage.error("加载失败") } finally { loading.value = false }
 }
+const handleSizeChange = () => { page.value = 1; fetchData() }
 const goDetail = (id) => router.push("/project/" + id)
 const goAdmin = () => router.push("/admin")
+const goUserManage = () => router.push("/user")
+const goPromptConfig = () => router.push("/prompt")
 const handleSearch = () => { page.value = 1; fetchData() }
 const handleLogout = () => { localStorage.clear(); router.push("/login") }
 onMounted(fetchData)
