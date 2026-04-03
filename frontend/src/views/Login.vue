@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="login-container">
     <el-card class="login-card">
       <template #header><h2>招投标管理系统</h2></template>
@@ -42,7 +42,9 @@ const handleLogin = async () => {
       localStorage.setItem("role", payload.role)
       localStorage.setItem("username", form.username)
       ElMessage.success("登录成功")
-      router.push("/")
+      // 管理员跳转仪表盘，普通用户跳转项目列表
+      const dest = payload.role === '"'"'admin'"'"' ? '"'"'/dashboard'"'"' : '"'"'/projects'"'"'
+      router.push(dest)
     } else { ElMessage.error(res.msg) }
   } catch (e) { ElMessage.error(e.response?.data?.msg || "登录失败") }
   finally { loading.value = false }
