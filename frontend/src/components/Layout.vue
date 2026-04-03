@@ -1,48 +1,45 @@
-﻿<template>
-  <a-config-provider :theme="themeToken">
-    <div class="layout">
-      <aside class="sidebar">
-        <div class="sidebar-logo">
-          <span class="logo-text">投标管理系统</span>
-        </div>
-        <a-menu v-model:selected-keys="selectedKeys" theme="dark" mode="inline" @menu-item-click="onMenuClick">
-          <a-menu-item key="/dashboard">
-            <template #icon><IconDashboard /></template>
-            仪表盘
-          </a-menu-item>
-          <a-menu-item key="/projects">
-            <template #icon><IconFolder /></template>
-            项目列表
-          </a-menu-item>
-          <a-menu-item v-if="roleName == 'admin'" key="/admin">
-            <template #icon><IconUpload /></template>
-            上传文件
-          </a-menu-item>
-          <a-menu-item v-if="roleName == 'admin'" key="/user">
-            <template #icon><IconUser /></template>
-            用户管理
-          </a-menu-item>
-          <a-menu-item v-if="roleName == 'admin'" key="/prompt">
-            <template #icon><IconSettings /></template>
-            Prompt配置
-          </a-menu-item>
-        </a-menu>
-        <div class="sidebar-footer">
-          <div class="user-info">
-            <span class="username">{{ userName }}</span>
-            <a-tag v-if="roleName == 'admin'" color="gold" size="small">管理员</a-tag>
-            <a-tag v-else color="arcoblue" size="small">普通用户</a-tag>
-          </div>
-          <a-button type="text" size="small" @click="handleLogout">退出</a-button>
-        </div>
-      </aside>
-      <div class="layout-main">
-        <router-view />
+<template>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-text">投标管理系统</span>
       </div>
+      <a-menu v-model:selected-keys="selectedKeys" theme="dark" mode="inline" @menu-item-click="onMenuClick">
+        <a-menu-item key="/dashboard">
+          <template #icon><IconDashboard /></template>
+          仪表盘
+        </a-menu-item>
+        <a-menu-item key="/projects">
+          <template #icon><IconFolder /></template>
+          项目列表
+        </a-menu-item>
+        <a-menu-item v-if="roleName == 'admin'" key="/admin">
+          <template #icon><IconUpload /></template>
+          上传文件
+        </a-menu-item>
+        <a-menu-item v-if="roleName == 'admin'" key="/user">
+          <template #icon><IconUser /></template>
+          用户管理
+        </a-menu-item>
+        <a-menu-item v-if="roleName == 'admin'" key="/prompt">
+          <template #icon><IconSettings /></template>
+          Prompt配置
+        </a-menu-item>
+      </a-menu>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <span class="username">{{ userName }}</span>
+          <a-tag v-if="roleName == 'admin'" color="gold" size="small">管理员</a-tag>
+          <a-tag v-else color="arcoblue" size="small">普通用户</a-tag>
+        </div>
+        <a-button type="text" size="small" @click="handleLogout">退出</a-button>
+      </div>
+    </aside>
+    <div class="layout-main">
+      <router-view />
     </div>
-  </a-config-provider>
+  </div>
 </template>
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -55,18 +52,10 @@ const roleName = localStorage.getItem('role') || 'user'
 
 const selectedKeys = ref([route.path])
 
-const themeToken = {
-  token: {
-    colorPrimary: '#165DFF',
-    borderRadius: 6
-  }
-}
-
 const onMenuClick = (key) => { router.push(key) }
 
 const handleLogout = () => { localStorage.clear(); router.push('/login') }
 </script>
-
 <style scoped>
 .layout { display: flex; min-height: 100vh; }
 .sidebar { width: 220px; background: #1e1e1e; display: flex; flex-direction: column; flex-shrink: 0; }
