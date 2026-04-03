@@ -1,10 +1,9 @@
 package com.bid.system.controller;
 
 import com.bid.system.service.DashboardService;
+import com.bid.system.dto.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 @RestController
 @RequestMapping("/api/dashboard")
@@ -14,17 +13,17 @@ public class DashboardController {
     private DashboardService dashboardService;
 
     @GetMapping("/stats")
-    public Map<String, Object> getStats() {
-        return dashboardService.getStats();
+    public ApiResponse getStats() {
+        return ApiResponse.success(dashboardService.getStats());
     }
 
     @GetMapping("/monthly")
-    public Map<String, Object> getMonthly() {
-        return dashboardService.getMonthlyProjects();
+    public ApiResponse getMonthly() {
+        return ApiResponse.success(dashboardService.getMonthlyProjects());
     }
 
     @GetMapping("/by-agency")
-    public Map<String, Object> getByAgency() {
-        return dashboardService.getProjectsByAgency();
+    public ApiResponse getByAgency() {
+        return ApiResponse.success(dashboardService.getProjectsByAgency());
     }
 }

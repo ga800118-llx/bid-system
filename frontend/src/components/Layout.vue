@@ -5,7 +5,7 @@
         <div class="sidebar-logo">
           <span class="logo-text">投标管理系统</span>
         </div>
-        <a-menu v-model:selected-keys="selectedKeys" theme="dark" mode="inline" @click="handleMenuClick">
+        <a-menu v-model:selected-keys="selectedKeys" theme="dark" mode="inline" @menu-item-click="onMenuClick">
           <a-menu-item key="/dashboard">
             <template #icon><IconDashboard /></template>
             仪表盘
@@ -62,7 +62,8 @@ const themeToken = {
   }
 }
 
-const handleMenuClick = ({ key }) => { router.push(key) }
+const onMenuClick = (key) => { router.push(key) }
+
 const handleLogout = () => { localStorage.clear(); router.push('/login') }
 </script>
 
