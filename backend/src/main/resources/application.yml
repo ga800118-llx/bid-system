@@ -1,4 +1,4 @@
-server:
+﻿server:
   port: 8080
 
 spring:
@@ -13,6 +13,8 @@ spring:
       max-request-size: 100MB
 
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

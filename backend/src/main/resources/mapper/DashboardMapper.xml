@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper xmlns="http://mybatis.org/schema/mybatis-3-mapper">
+<mapper namespace="com.bid.system.mapper.DashboardMapper">
+
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*) FROM projects
+    </select>
+
+    <select id="selectMonthCount" resultType="int">
+        SELECT COUNT(*) FROM projects
+        WHERE YEAR(created_at) = YEAR(CURDATE())
+        AND MONTH(created_at) = MONTH(CURDATE())
+    </select>
+
+    <select id="selectPendingCount" resultType="int">
+        SELECT COUNT(*) FROM projects
+        WHERE bid_open_time IS NOT NULL AND bid_open_time != ''
+        AND bid_open_time > NOW()
+    </select>
+
+    <select id="selectAgencyCount" resultType="int">
+        SELECT COUNT(DISTINCT bidding_agency) FROM projects
+        WHERE bidding_agency IS NOT NULL AND bidding_agency != ''
+    </select>
+
+    <select id="selectMonthlyProjects" resultType="map">
+        SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, COUNT(*) AS count
+        FROM projects
+        WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+        GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+        ORDER BY month ASC
+    </select>
+
+    <select id="selectTopAgencies" resultType="map">
+        SELECT bidding_agency AS agency, COUNT(*) AS count
+        FROM projects
+        WHERE bidding_agency IS NOT NULL AND bidding_agency != ''
+        GROUP BY bidding_agency
+        ORDER BY count DESC
+        LIMIT 5
+    </select>
+
+</mapper>
