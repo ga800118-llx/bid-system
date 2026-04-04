@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: window.location.protocol + '//' + window.location.hostname + ':8080',
   timeout: 600000
 })
 
@@ -26,18 +26,17 @@ api.interceptors.response.use(
 )
 
 export const userApi = {
-  login: (data) => api.post('/user/login', data),
-  register: (data) => api.post('/user/register', data),
-  getInfo: () => api.get('/user/info'),
-  list: () => api.get('/user/list'),
-  updateRole: (id, role) => api.put('/user/role/' + id, null, { params: { role } }),
-  updatePassword: (id, password) => api.put('/user/password/' + id, null, { params: { password } })
+  login: (data) => api.post('/api/user/login', data),
+  register: (data) => api.post('/api/user/register', data),
+  getInfo: () => api.get('/api/user/info'),
+  list: () => api.get('/api/user/list'),
+  updateRole: (id, role) => api.put('/api/user/role/' + id, null, { params: { role } }),
+  updatePassword: (id, password) => api.put('/api/user/password/' + id, null, { params: { password } })
 }
 
 export const projectApi = {
   upload: (formData, onProgress) => {
     const config = {
-      headers: { 'Content-Type': 'multipart/form-data' },
       timeout: 600000
     }
     if (onProgress) {
@@ -46,14 +45,15 @@ export const projectApi = {
         onProgress(percent)
       }
     }
-    return api.post('/project/upload', formData, config)
+    return api.post('/api/project/upload', formData, config)
   },
-  list: (params) => api.get('/project/list', { params }),
-  detail: (id) => api.get('/project/' + id),
-  download: (id) => api.get('/project/download/' + id, { responseType: 'blob' }),
-  downloadMarkdown: (id) => api.get('/project/download/' + id + '/markdown', { responseType: 'blob' }),
-  delete: (id) => api.delete('/project/' + id),
-  batchDelete: (ids) => api.post('/project/batch-delete', { ids: ids })
+  list: (params) => api.get('/api/project/list', { params }),
+  detail: (id) => api.get('/api/project/' + id),
+  download: (id) => api.get('/api/project/download/' + id, { responseType: 'blob' }),
+  downloadMarkdown: (id) => api.get('/api/project/download/' + id + '/markdown', { responseType: 'blob' }),
+  delete: (id) => api.delete('/api/project/' + id),
+  batchDelete: (ids) => api.post('/api/project/batch-delete', { ids: ids })
 }
 
 export default api
+

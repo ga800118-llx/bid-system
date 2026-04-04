@@ -35,3 +35,12 @@ app:
     script: C:/UPQQ/pdf_extract.py
   prompt-template:
     path: C:/UPQQ/prompt_template.json
+
+logging:
+  level:
+    root: INFO
+    com.bid.system: DEBUG
+  file:
+    name: backend.log
+    max-size: 10MB
+    max-history: 3

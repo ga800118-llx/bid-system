@@ -1,77 +1,74 @@
-<template>
+﻿<template>
   <div class="user-container">
     <div class="header">
       <div class="header-left">
         <h2>用户管理</h2>
       </div>
       <div class="header-right">
-        <el-button link @click="$router.push('/')">返回首页</el-button>
+        <a-link @click="$router.push('/')">返回首页</a-link>
       </div>
     </div>
     <div class="main">
-      <el-table :data="tableData" stripe v-loading="loading">
-        <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="username" label="用户名" min-width="150" />
-        <el-table-column prop="role" label="角色" width="120">
-          <template #default="{ row }">
-            <el-select v-model="row.role" size="small" style="width:100px" @change="handleRoleChange(row)">
-              <el-option label="普通用户" value="user" />
-              <el-option label="管理员" value="admin" />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column prop="createdAt" label="注册时间" width="160">
-          <template #default="{ row }">{{ row.createdAt ? row.createdAt.replace("T"," ").substring(0,16) : "-" }}</template>
-        </el-table-column>
-        <el-table-column label="操作" width="150">
-          <template #default="{ row }">
-            <el-button link type="primary" size="small" @click="handleResetPassword(row)">重置密码</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <a-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" row-key="id" stripe>
+        <template #index="{ rowIndex }">{{ rowIndex + 1 }}</template>
+        <template #role="{ record }">
+          <a-select v-model="record.role" size="small" style="width:100px" @change="handleRoleChange(record)">
+            <a-option value="user">普通用户</a-option>
+            <a-option value="admin">管理员</a-option>
+          </a-select>
+        </template>
+        <template #createdAt="{ record }">{{ record.createdAt ? record.createdAt.replace('T',' ').substring(0,16) : '-' }}</template>
+        <template #actions="{ record }">
+          <a-button type="text" size="small" @click="handleResetPassword(record)">重置密码</a-button>
+        </template>
+      </a-table>
     </div>
 
-    <el-dialog v-model="pwdDialogVisible" title="重置密码" width="400px">
-      <el-form :model="pwdForm" label-width="80px">
-        <el-form-item label="用户">
-          <el-input v-model="pwdForm.username" disabled />
-        </el-form-item>
-        <el-form-item label="新密码">
-          <el-input v-model="pwdForm.password" type="password" placeholder="请输入新密码" show-password />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="pwdDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="confirmResetPassword">确定</el-button>
-      </template>
-    </el-dialog>
+    <a-modal v-model:visible="pwdDialogVisible" title="重置密码" :width="'400px'" @ok="confirmResetPassword" @cancel="pwdDialogVisible = false">
+      <a-form :model="pwdForm" layout="vertical">
+        <a-form-item label="用户">
+          <a-input v-model="pwdForm.username" disabled />
+        </a-form-item>
+        <a-form-item label="新密码">
+          <a-input-password v-model="pwdForm.password" placeholder="请输入新密码（至少6位）" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { ElMessage } from "element-plus"
-import { userApi } from "@/api"
+import { ref, onMounted } from 'vue'
+import { Message } from '@arco-design/web-vue'
+import { userApi } from '@/api'
 
 const loading = ref(false)
 const tableData = ref([])
 const pwdDialogVisible = ref(false)
 const pwdForm = ref({ id: null, username: '', password: '' })
 
+const columns = [
+  { title: 'ID', dataIndex: 'id', width: 80 },
+  { title: '用户名', dataIndex: 'username', minWidth: 150 },
+  { title: '角色', dataIndex: 'role', width: 120, slotName: 'role' },
+  { title: '注册时间', dataIndex: 'createdAt', width: 160, slotName: 'createdAt' },
+  { title: '操作', width: 150, slotName: 'actions' }
+]
+
 const fetchUsers = async () => {
   loading.value = true
   try {
     const res = await userApi.list()
     if (res.code === 200) tableData.value = res.data
-  } catch (e) { ElMessage.error("加载用户列表失败") }
+  } catch (e) { Message.error('加载用户列表失败') }
   finally { loading.value = false }
 }
 
 const handleRoleChange = async (row) => {
   try {
     await userApi.updateRole(row.id, row.role)
-    ElMessage.success("角色更新成功")
-  } catch (e) { ElMessage.error("更新失败") }
+    Message.success('角色更新成功')
+  } catch (e) { Message.error('更新失败') }
 }
 
 const handleResetPassword = (row) => {
@@ -81,14 +78,14 @@ const handleResetPassword = (row) => {
 
 const confirmResetPassword = async () => {
   if (!pwdForm.value.password || pwdForm.value.password.length < 6) {
-    ElMessage.warning("密码至少6位")
+    Message.warning('密码至少6位')
     return
   }
   try {
     await userApi.updatePassword(pwdForm.value.id, pwdForm.value.password)
-    ElMessage.success("密码重置成功")
+    Message.success('密码重置成功')
     pwdDialogVisible.value = false
-  } catch (e) { ElMessage.error("重置失败") }
+  } catch (e) { Message.error('操作失败') }
 }
 
 onMounted(fetchUsers)
@@ -97,5 +94,6 @@ onMounted(fetchUsers)
 <style scoped>
 .user-container { min-height: 100vh; background: #f0f2f5; }
 .header { background: #fff; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
 .main { padding: 24px; max-width: 1000px; margin: 0 auto; }
 </style>

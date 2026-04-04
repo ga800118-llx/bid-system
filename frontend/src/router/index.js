@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/components/Layout.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
+import Home from '@/views/Home.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import Projects from '@/views/Projects.vue'
 import ProjectDetail from '@/views/ProjectDetail.vue'
@@ -15,9 +16,14 @@ const routes = [
   {
     path: '/',
     component: Layout,
+    redirect: (to) => {
+      const role = localStorage.getItem('role')
+      return role === 'admin' ? '/dashboard' : '/projects'
+    },
     meta: { requiresAuth: true },
     children: [
       { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { requiresAdmin: true } },
+      { path: '/home', name: 'Home', component: Home },
       { path: '/projects', name: 'Projects', component: Projects },
       { path: '/project/:id', name: 'ProjectDetail', component: ProjectDetail },
       { path: '/admin', name: 'Admin', component: Admin, meta: { requiresAdmin: true } },
