@@ -1,94 +1,103 @@
-<template>
+﻿<template>
   <div class="admin-container">
     <div class="header">
-      <el-button icon="Back" @click="goHome">返回首页</el-button>
-      <h2>上传招标文件</h2>
+      <a-button @click="goHome">返回首页</a-button>
+      <h2>上传招标文档</h2>
       <div></div>
     </div>
     <div class="main">
-      <el-card>
-        <el-upload ref="uploadRef" drag :auto-upload="false" :limit="1" :on-change="handleFileChange" :file-list="fileList" accept=".pdf,.doc,.docx">
-          <el-icon><UploadFilled /></el-icon>
-          <div>将文件拖到此处，<span style="color:#409eff">点击选择</span></div>
-          <template #tip><div class="el-upload__tip">支持 PDF、Word 文档，单个文件不超过100MB</div></template>
-        </el-upload>
+      <a-card>
+        <a-upload
+          drag
+          :auto-upload="false"
+          :limit="1"
+          :on-change="handleFileChange"
+          accept=".pdf,.doc,.docx"
+          style="width:100%"
+        >
+          <template #upload-icon>
+            <a-icon-plus />
+          </template>
+          <div class="upload-text">
+            将文件拖到此处，或<span style="color:#1650ff">点击选择</span>
+          </div>
+          <template #tip>
+            <div style="color:#86909c;font-size:12px;margin-top:8px">支持 PDF、Word 文档，单个文件不超过100MB</div>
+          </template>
+        </a-upload>
         <div class="actions">
-          <el-button type="primary" size="large" :loading="uploading" :disabled="!file" @click="handleUpload">上传并提取</el-button>
-          <el-button size="large" @click="goHome">取消</el-button>
+          <a-button type="primary" size="large" :loading="uploading" :disabled="!file" @click="handleUpload">上传智能提取</a-button>
+          <a-button size="large" @click="goHome">取消</a-button>
         </div>
         <div v-if="uploading" class="progress-area">
-          <el-progress
-            :percentage="progressPercent"
-            :indeterminate="isExtracting"
-            :format="(p) => isExtracting ? '正在提取信息，请稍候...' : `上传中... ${p}%`"
+          <a-progress
+            :percent="progressPercent"
+            :status="isExtracting ? 'active' : 'success'"
+            :format="(p) => isExtracting ? 'AI提取信息中，请稍候...' : `上传进度 ${p}%`"
           />
         </div>
-      </el-card>
-      <el-card style="margin-top:24px">
-        <template #header>
+      </a-card>
+      <a-card style="margin-top:24px">
+        <template #title>
           <div style="display:flex;justify-content:space-between;align-items:center">
             <span>最近上传</span>
-            <el-button link @click="goHome" type="primary">查看全部</el-button>
+            <a-button type="text" size="small" @click="goHome">查看全部</a-button>
           </div>
         </template>
-        <el-table :data="recentProjects" stripe @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" width="60" align="center">
-            <template #default="{ $index }">{{ $index + 1 }}</template>
-          </el-table-column>
-          <el-table-column prop="projectName" label="项目名称">
-            <template #default="{ row }">
-              <div class="name-cell">{{ row.projectName }}</div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="projectCode" label="项目编号" width="150" />
-          <el-table-column label="开标时间" width="160">
-            <template #default="{ row }">{{ row.bidOpenTime ? row.bidOpenTime.replace('T',' ').substring(0,16) : "-" }}</template>
-          </el-table-column>
-          <el-table-column prop="createdAt" label="录入时间" width="160">
-            <template #default="{ row }">{{ row.createdAt ? row.createdAt.replace('T',' ').substring(0,16) : "-" }}</template>
-          </el-table-column>
-          <el-table-column label="操作" width="120">
-            <template #default="{ row }"><el-button link type="primary" @click="goDetail(row.id)">查看</el-button></template>
-          </el-table-column>
-        </el-table>
-      </el-card>
+        <a-table :columns="columns" :data="recentProjects" :loading="tableLoading" :pagination="false" row-key="id" stripe>
+          <template #selection="{ record, onChange }">
+            <a-checkbox :model-value="selectedIds.includes(record.id)" @change="(val) => { onChange(val ? [...selectedIds, record.id] : selectedIds.filter(id => id !== record.id)) }" />
+          </template>
+          <template #index="{ rowIndex }">{{ rowIndex + 1 }}</template>
+          <template #projectName="{ record }">
+            <div class="name-cell">{{ record.projectName }}</div>
+          </template>
+          <template #bidOpenTime="{ record }">{{ record.bidOpenTime ? record.bidOpenTime.replace('T',' ').substring(0,16) : '-' }}</template>
+          <template #createdAt="{ record }">{{ record.createdAt ? record.createdAt.replace('T',' ').substring(0,16) : '-' }}</template>
+          <template #actions="{ record }">
+            <a-button type="text" size="small" @click="goDetail(record.id)">查看详情</a-button>
+          </template>
+        </a-table>
+      </a-card>
 
-    <div v-if="selectedIds.length > 0" class="batch-action-bar">
-      <span class="batch-info">已选择 {{ selectedIds.length }} 项</span>
-      <el-button @click="selectedIds = []; selectedRows = []">取消</el-button>
-      <el-button type="danger" @click="confirmBatchDelete">批量删除</el-button>
-    </div>
-
-    <el-dialog v-model="showDeleteDialog" title="确认删除" width="500px">
-      <div style="margin-bottom: 12px;">确定要删除以下 {{ selectedIds.length }} 项吗？此操作不可恢复。</div>
-      <div class="delete-list">
-        <div v-for="row in selectedRows.slice(0, 10)" :key="row.id" class="delete-item">
-          {{ row.projectName }}
-        </div>
-        <div v-if="selectedRows.length > 10" style="color: #999; font-size: 12px; margin-top: 6px;">
-          还有 {{ selectedRows.length - 10 }} 项...
-        </div>
+      <div v-if="selectedIds.length > 0" class="batch-action-bar">
+        <span class="batch-info">已选择 {{ selectedIds.length }} 项</span>
+        <a-button @click="selectedIds = []">取消</a-button>
+        <a-button type="primary" status="danger" @click="showDeleteDialog = true">批量删除</a-button>
       </div>
-      <template #footer>
-        <el-button @click="showDeleteDialog = false">取消</el-button>
-        <el-button type="danger" :loading="deleting" @click="handleBatchDelete">确认删除</el-button>
-      </template>
-    </el-dialog>
+
+      <a-modal
+        v-model:visible="showDeleteDialog"
+        title="确认删除"
+        :width="500"
+        @before-ok="handleBatchDelete"
+        @cancel="showDeleteDialog = false"
+      >
+        <div style="margin-bottom:12px">确认要删除选中的 {{ selectedIds.length }} 项吗？此操作不可恢复。</div>
+        <div class="delete-list">
+          <div v-for="row in selectedRows.slice(0, 10)" :key="row.id" class="delete-item">
+            {{ row.projectName }}
+          </div>
+          <div v-if="selectedRows.length > 10" style="color:#999;font-size:12px;margin-top:6px">
+            还有 {{ selectedRows.length - 10 }} 项...
+          </div>
+        </div>
+      </a-modal>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
-import { ElMessage } from "element-plus"
+import { Message } from "@arco-design/web-vue"
 import { projectApi } from "@/api"
+
 const router = useRouter()
-const uploadRef = ref()
 const file = ref(null)
-const fileList = ref([])
 const uploading = ref(false)
 const recentProjects = ref([])
+const tableLoading = ref(false)
 const progressPercent = ref(0)
 const isExtracting = ref(false)
 const selectedIds = ref([])
@@ -96,45 +105,24 @@ const selectedRows = ref([])
 const showDeleteDialog = ref(false)
 const deleting = ref(false)
 
-const handleSelectionChange = (rows) => {
-  selectedRows.value = rows
-  selectedIds.value = rows.map(r => r.id)
-}
+const columns = [
+  { title: '', width: 50, align: 'center', slotName: 'selection' },
+  { title: '序号', width: 60, align: 'center', slotName: 'index' },
+  { title: '项目名称', dataIndex: 'projectName', minWidth: 200, slotName: 'projectName' },
+  { title: '项目代码', dataIndex: 'projectCode', width: 150 },
+  { title: '开标时间', dataIndex: 'bidOpenTime', width: 160, slotName: 'bidOpenTime' },
+  { title: '录入时间', dataIndex: 'createdAt', width: 160, slotName: 'createdAt' },
+  { title: '操作', width: 100, slotName: 'actions' }
+]
 
-const confirmBatchDelete = () => {
-  if (!selectedIds.value.length) return
-  showDeleteDialog.value = true
-}
-
-const handleBatchDelete = async () => {
-  deleting.value = true
-  try {
-    const res = await projectApi.batchDelete(selectedIds.value)
-    if (res.code === 200) {
-      ElMessage.success("Deleted " + res.data + " items")
-      showDeleteDialog.value = false
-      selectedIds.value = []
-      selectedRows.value = []
-      fetchRecent()
-    } else {
-      ElMessage.error(res.msg || "Delete failed")
-    }
-  } catch (e) {
-    ElMessage.error("Delete failed")
-  } finally {
-    deleting.value = false
-  }
-}
-
-
-const handleFileChange = (uploadFile) => {
-  file.value = uploadFile.raw
+const handleFileChange = (fileList) => {
+  file.value = fileList[0]?.file || null
   progressPercent.value = 0
   isExtracting.value = false
 }
 
 const handleUpload = async () => {
-  if (!file.value) { ElMessage.warning("请先选择文件"); return }
+  if (!file.value) { Message.warning("请先选择文件"); return }
   uploading.value = true
   progressPercent.value = 0
   isExtracting.value = false
@@ -146,13 +134,13 @@ const handleUpload = async () => {
       if (percent >= 100) isExtracting.value = true
     })
     if (res.code === 200) {
-      ElMessage.success("上传并提取成功！")
+      Message.success("上传智能提取成功")
       router.push("/project/" + res.data.id)
     } else {
-      ElMessage.error(res.msg || "上传失败")
+      Message.error(res.msg || "上传失败")
     }
   } catch (e) {
-    ElMessage.error("上传失败: " + (e.response?.data?.msg || e.message))
+    Message.error("上传失败: " + (e.response?.data?.msg || e.message))
   } finally {
     uploading.value = false
     progressPercent.value = 0
@@ -160,26 +148,67 @@ const handleUpload = async () => {
   }
 }
 
+const handleBatchDelete = async (done) => {
+  deleting.value = true
+  try {
+    const res = await projectApi.batchDelete(selectedIds.value)
+    if (res.code === 200) {
+      Message.success("已删除 " + res.data + " 项")
+      showDeleteDialog.value = false
+      selectedIds.value = []
+      selectedRows.value = []
+      fetchRecent()
+    } else {
+      Message.error(res.msg || "删除失败")
+    }
+  } catch {
+    Message.error("删除失败")
+  } finally {
+    deleting.value = false
+  }
+  done()
+}
+
 const goHome = () => router.push("/")
 const goDetail = (id) => router.push("/project/" + id)
+
 const fetchRecent = async () => {
+  tableLoading.value = true
   try {
     const res = await projectApi.list({ page: 1, size: 20 })
-    if (res.code === 200) recentProjects.value = res.data.records
-  } catch {}
+    if (res.code === 200) {
+      recentProjects.value = res.data.records
+      // sync selection
+      selectedRows.value = selectedRows.value.filter(r =>
+        recentProjects.value.some(p => p.id === r.id)
+      )
+      selectedIds.value = selectedIds.value.filter(id =>
+        recentProjects.value.some(p => p.id === id)
+      )
+    }
+  } catch {} finally { tableLoading.value = false }
 }
+
+// checkbox selection sync with table data
+const syncSelection = (rows) => {
+  selectedRows.value = rows
+  selectedIds.value = rows.map(r => r.id)
+}
+
 onMounted(fetchRecent)
 </script>
+
 <style scoped>
 .admin-container { min-height: 100vh; background: #f0f2f5; }
-.header { max-width: 1400px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: space-between; }
-.main { max-width: 1400px; margin: 0 auto; }
+.header { max-width: 1400px; margin: 0 auto 24px; background: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+.header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
+.main { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
 .actions { margin-top: 24px; display: flex; gap: 12px; justify-content: center; }
 .progress-area { margin-top: 16px; }
 .name-cell { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-
 .batch-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 12px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 -2px 8px rgba(0,0,0,.1); z-index: 100; }
 .batch-info { color: #333; font-size: 14px; margin-right: auto; }
 .delete-list { max-height: 300px; overflow-y: auto; }
 .delete-item { padding: 4px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upload-text { color: #4e5969; font-size: 14px; }
 </style>
