@@ -38,20 +38,16 @@
     <div class="layout-main">
       <div class="layout-breadcrumb">
         <a-breadcrumb>
-          <a-breadcrumb-item><router-link to="/dashboard">??</router-link></a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/projects'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path.startsWith('/project/') && $route.path != '/projects'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path.startsWith('/project/') && $route.path != '/projects'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/admin'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/admin'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/user'">????</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/prompt'">Prompt??</a-breadcrumb-item>
-          <a-breadcrumb-item v-if="$route.path == '/dashboard'">????</a-breadcrumb-item>
+          <a-breadcrumb-item><router-link to="/dashboard">首页</router-link></a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/projects' || $route.path.startsWith('/project/')">项目列表</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path.startsWith('/project/') && $route.path != '/projects'">项目详情</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/admin'">上传管理</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/user'">用户管理</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/prompt'">Prompt配置</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/dashboard'">数据看板</a-breadcrumb-item>
         </a-breadcrumb>
-
       </div>
       <router-view />
-
     </div>
   </div>
 </template>
