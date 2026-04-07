@@ -9,6 +9,7 @@ import ProjectDetail from '@/views/ProjectDetail.vue'
 import Admin from '@/views/Admin.vue'
 import UserManage from '@/views/UserManage.vue'
 import PromptConfig from '@/views/PromptConfig.vue'
+import Help from '@/views/Help.vue'
 
 const routes = [
   { path: '/login', name: 'Login', component: Login },
@@ -25,7 +26,8 @@ const routes = [
       { path: '/project/:id', name: 'ProjectDetail', component: ProjectDetail },
       { path: '/admin', name: 'Admin', component: Admin, meta: { requiresAdmin: true } },
       { path: '/user', name: 'UserManage', component: UserManage, meta: { requiresAdmin: true } },
-      { path: '/prompt', name: 'PromptConfig', component: PromptConfig, meta: { requiresAdmin: true } }
+      { path: '/prompt', name: 'PromptConfig', component: PromptConfig, meta: { requiresAdmin: true } },
+      { path: '/help', name: 'Help', component: Help }
     ]
   }
 ]

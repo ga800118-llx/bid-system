@@ -25,6 +25,10 @@
           <template #icon><IconSettings /></template>
           Prompt配置
         </a-menu-item>
+        <a-menu-item key="/help">
+          <template #icon><IconQuestion /></template>
+          帮助文档
+        </a-menu-item>
       </a-menu>
     </aside>
     <div class="layout-main">
@@ -36,7 +40,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { IconDashboard, IconFolder, IconUpload, IconUser, IconSettings } from '@arco-design/web-vue/es/icon'
+import { IconDashboard, IconFolder, IconUpload, IconUser, IconSettings, IconQuestion } from '@arco-design/web-vue/es/icon'
 
 const router = useRouter()
 const route = useRoute()
