@@ -2,7 +2,7 @@
   <div class="admin-container">
     <div class="header">
       <a-breadcrumb style="margin-bottom:12px">
-        <a-breadcrumb-item><router-link to="/home">首页</router-link></a-breadcrumb-item>
+        <a-breadcrumb-item><router-link to="/dashboard">首页</router-link></a-breadcrumb-item>
         <a-breadcrumb-item>上传管理</a-breadcrumb-item>
       </a-breadcrumb>
       <a-button @click="goHome">返回首页</a-button>
