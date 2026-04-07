@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="prompt-container">
     <div class="header">
-      <div class="header-left"><a-breadcrumb style="margin-bottom:8px">
+      <div class="header-left">      <a-breadcrumb style="margin-bottom:8px">
         <a-breadcrumb-item><router-link to="/dashboard">首页</router-link></a-breadcrumb-item>
         <a-breadcrumb-item>Prompt配置</a-breadcrumb-item>
       </a-breadcrumb><h2>Prompt 配置</h2></div>
