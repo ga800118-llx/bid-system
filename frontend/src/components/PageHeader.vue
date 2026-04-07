@@ -15,7 +15,8 @@
 </template>
 
 <script setup>
-import { computed, useRoute } from 'vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 defineProps({
   title: { type: String, required: true }
