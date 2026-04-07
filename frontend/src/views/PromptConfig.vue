@@ -1,11 +1,6 @@
 ﻿<template>
   <div class="prompt-container">
-    <div class="header">
-      <div class="header-left"><h2>Prompt 配置</h2></div>
-      <div class="header-right">
-        <a-link @click="$router.push('/')">返回首页</a-link>
-      </div>
-    </div>
+    <PageHeader title="Prompt配置" />>
     <div class="main">
       <a-card :loading="loading">
         <a-form :model="form" layout="vertical">

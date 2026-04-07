@@ -1,10 +1,6 @@
 ﻿<template>
   <div class="admin-container">
-    <div class="header">
-      <a-button @click="goHome">返回首页</a-button>
-      <h2>上传招标文档</h2>
-      <div></div>
-    </div>
+    <PageHeader title="上传招标文档" />>
     <div class="main">
       <a-card>
         <div

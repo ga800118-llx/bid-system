@@ -1,8 +1,6 @@
 ﻿<template>
   <div class="projects-page">
-    <div class="page-header">
-      <h2>项目列表</h2>
-    </div>
+    <PageHeader title="项目列表" />>
     <div class="main">
       <div class="toolbar">
         <a-input-search v-model="keyword" placeholder="请输入项目名称搜索" style="width:300px" @search="handleSearch" allow-clear />

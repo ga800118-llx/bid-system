@@ -1,12 +1,6 @@
 ﻿<template>
   <div class="user-container">
-    <div class="header">
-      <div class="header-left"><h2>用户管理</h2>
-      </div>
-      <div class="header-right">
-        <a-link @click="$router.push('/')">返回首页</a-link>
-      </div>
-    </div>
+    <PageHeader title="用户管理" />>
     <div class="main">
       <a-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" row-key="id" stripe>
         <template #index="{ rowIndex }">{{ rowIndex + 1 }}</template>
