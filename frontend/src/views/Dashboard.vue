@@ -1,6 +1,10 @@
 ﻿<template>
   <div class="dashboard">
     <div class="page-header">
+      <a-breadcrumb style="margin-bottom:8px">
+        <a-breadcrumb-item><router-link to="/home">首页</router-link></a-breadcrumb-item>
+        <a-breadcrumb-item>数据看板</a-breadcrumb-item>
+      </a-breadcrumb>
       <h2>仪表盘</h2>
     </div>
     <div class="content">

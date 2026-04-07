@@ -1,7 +1,10 @@
 ﻿<template>
   <div class="prompt-container">
     <div class="header">
-      <div class="header-left"><h2>Prompt 配置</h2></div>
+      <div class="header-left"><a-breadcrumb style="margin-bottom:8px">
+        <a-breadcrumb-item><router-link to="/home">首页</router-link></a-breadcrumb-item>
+        <a-breadcrumb-item>Prompt配置</a-breadcrumb-item>
+      </a-breadcrumb><h2>Prompt 配置</h2></div>
       <div class="header-right">
         <a-link @click="$router.push('/')">返回首页</a-link>
       </div>

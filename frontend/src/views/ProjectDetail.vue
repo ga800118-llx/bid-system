@@ -1,6 +1,11 @@
 ﻿<template>
   <div class="detail-container">
     <div class="header">
+      <a-breadcrumb style="margin-bottom:12px">
+        <a-breadcrumb-item><router-link to="/home">首页</router-link></a-breadcrumb-item>
+        <a-breadcrumb-item><router-link to="/projects">项目列表</router-link></a-breadcrumb-item>
+        <a-breadcrumb-item>项目详情</a-breadcrumb-item>
+      </a-breadcrumb>
       <a-button @click="goBack">返回</a-button>
       <a-button v-if="userRole == 'admin'" status="danger" @click="handleDelete">删除项目</a-button>
     </div>

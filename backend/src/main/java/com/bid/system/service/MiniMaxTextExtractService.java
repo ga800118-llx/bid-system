@@ -4,17 +4,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.net.http.*;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.*;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class MiniMaxTextExtractService {
+    private static final Logger log = LoggerFactory.getLogger(MiniMaxTextExtractService.class);
 
     @Value("${app.minimax.api-key}")
     private String apiKey;
@@ -32,13 +36,11 @@ public class MiniMaxTextExtractService {
     private PromptTemplateService promptTemplateService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(30))
+            .build();
 
-    @Autowired
-    private RestTemplate restTemplate;
-
-    /**
-     * Returns a map with keys: text (String), textLength (Integer), pageCount (Integer)
-     */
     public Map<String, Object> extractTextFromPdf(String filePath) throws Exception {
         ProcessBuilder pb = new ProcessBuilder("python", "-X", "utf8", pdfExtractScript, filePath);
         pb.redirectErrorStream(true);
@@ -56,11 +58,11 @@ public class MiniMaxTextExtractService {
         boolean finished = process.waitFor(5, java.util.concurrent.TimeUnit.MINUTES);
         if (!finished) {
             process.destroyForcibly();
-            throw new RuntimeException("PDF\u63d0\u53d6\u811a\u672f\u6267\u884c\u8d85\u65f6\uff0c\u8d85\u8fc75\u5206\u949f");
+            throw new RuntimeException("PDF提取脚本执行超时，超过5分钟");
         }
         int exitCode = process.exitValue();
         if (exitCode != 0) {
-            throw new RuntimeException("PDF\u63d0\u53d6\u811a\u672f\u6267\u884c\u5931\u8d25\uff0c\u9000\u51fa\u7801: " + exitCode);
+            throw new RuntimeException("PDF提取脚本执行失败，退出码: " + exitCode);
         }
 
         String result = output.toString();
@@ -69,9 +71,9 @@ public class MiniMaxTextExtractService {
         if (map.containsKey("error")) {
             String error = (String) map.get("error");
             if ("EMPTY".equals(error)) {
-                throw new RuntimeException("\u8be5\u6587\u4ef6\u4e3a\u626b\u63cf\u4ef6\u6216\u65e0\u6587\u5b57\u5c42\uff0c\u8bf7\u4e0a\u4f20\u6587\u5b57\u7248PDF");
+                throw new RuntimeException("该文件为扫描件或无文字层，请上传文字版PDF");
             }
-            throw new RuntimeException("PDF\u63d0\u53d6\u5931\u8d25: " + map.get("error"));
+            throw new RuntimeException("PDF提取失败: " + map.get("error"));
         }
 
         Map<String, Object> res = new HashMap<>();
@@ -82,47 +84,57 @@ public class MiniMaxTextExtractService {
     }
 
     public Map<String, Object> extract(String pdfText) throws Exception {
+        System.out.println("[DEBUG] extract() called. apiUrl=" + apiUrl);
+        System.out.println("[DEBUG] apiKey prefix: " + (apiKey != null ? apiKey.substring(0, Math.min(10, apiKey.length())) : "null"));
+        System.out.println("[DEBUG] httpClient version: " + httpClient.version().toString());
         String truncated = pdfText.length() > maxTextLength ? pdfText.substring(0, maxTextLength) : pdfText;
         String userPrompt = promptTemplateService.buildPrompt(truncated);
         String systemPrompt = promptTemplateService.getSystemPrompt();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Bearer " + apiKey);
-
         Map<String, Object> body = new HashMap<>();
         body.put("model", "MiniMax-M2.7");
-        
-        // Build messages array: system prompt (if any) + user prompt
         if (systemPrompt != null && !systemPrompt.isEmpty()) {
             body.put("messages", new Object[]{
-                java.util.Map.of("role", "system", "content", systemPrompt),
-                java.util.Map.of("role", "user", "content", userPrompt)
+                Map.of("role", "system", "content", systemPrompt),
+                Map.of("role", "user", "content", userPrompt)
             });
         } else {
             body.put("messages", new Object[]{
-                java.util.Map.of("role", "user", "content", userPrompt)
+                Map.of("role", "user", "content", userPrompt)
             });
         }
         body.put("temperature", 0.1);
 
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+        String jsonBody = objectMapper.writeValueAsString(body);
 
-        ResponseEntity<String> resp = restTemplate.exchange(
-            apiUrl + "/v1/text/chatcompletion_v2",
-            HttpMethod.POST,
-            entity,
-            String.class
-        );
+        String cleanApiUrl = apiUrl != null ? apiUrl.trim() : "https://api.minimax.chat";
+        System.out.println("[DEBUG] cleanApiUrl: " + cleanApiUrl);
+        String endpoint = cleanApiUrl + "/v1/text/chatcompletion_v2";
+        System.out.println("[DEBUG] Full endpoint: " + endpoint);
 
-        return parseResponse(resp.getBody());
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(java.net.URI.create(endpoint))
+                .timeout(Duration.ofSeconds(120))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + apiKey)
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> resp = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("[DEBUG] MiniMax response: status=" + resp.statusCode() + " bodyLen=" + (resp.body() != null ? resp.body().length() : "null"));
+        if (resp.statusCode() != 200) {
+            throw new RuntimeException("MiniMax API调用失败，状态码: " + resp.statusCode() + "，响应: " + resp.body());
+        }
+
+        return parseResponse(resp.body());
     }
 
     private Map<String, Object> parseResponse(String jsonStr) throws Exception {
         JsonNode root = objectMapper.readTree(jsonStr);
         JsonNode choices = root.get("choices");
         if (choices == null || !choices.isArray() || choices.isEmpty()) {
-            throw new RuntimeException("MiniMax\u8fd4\u56fe\u683c\u5f0f\u5f02\u5e38: " + jsonStr);
+            throw new RuntimeException("MiniMax返回格式异常: " + jsonStr);
         }
 
         JsonNode msg = choices.get(0).get("message");
@@ -131,9 +143,9 @@ public class MiniMaxTextExtractService {
             : "";
 
         content = content.trim();
-        if (content.startsWith("```json")) {
+        if (content.startsWith("`json")) {
             content = content.substring(7);
-        } else if (content.startsWith("\"")) {
+        } else if (content.startsWith("\"") && content.length() > 3) {
             content = content.substring(3);
         }
         if (content.endsWith("\"")) {
