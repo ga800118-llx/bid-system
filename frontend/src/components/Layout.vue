@@ -36,7 +36,20 @@
       </div>
     </aside>
     <div class="layout-main">
+      <div class="layout-breadcrumb">
+        <a-breadcrumb>
+          <a-breadcrumb-item><router-link to="/dashboard">首页</router-link></a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path.startsWith('/project')">项目列表</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path.startsWith('/project/')">项目详情</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/projects'">项目列表</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/admin'">上传管理</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/user'">用户管理</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/prompt'">Prompt配置</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="$route.path == '/dashboard'">数据看板</a-breadcrumb-item>
+        </a-breadcrumb>
+      </div>
       <router-view />
+
     </div>
   </div>
 </template>
@@ -62,6 +75,7 @@ const handleLogout = () => { localStorage.clear(); router.push('/login') }
 .sidebar-logo { height: 60px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .logo-text { color: #165DFF; font-size: 16px; font-weight: 600; letter-spacing: 1px; }
 .layout-main { flex: 1; overflow: auto; background: #f0f2f5; }
+.layout-breadcrumb { background: #fff; padding: 12px 24px; border-bottom: 1px solid #e8e8e8; }
 .sidebar-footer { margin-top: auto; padding: 16px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 8px; }
 .user-info { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 13px; }
 </style>
