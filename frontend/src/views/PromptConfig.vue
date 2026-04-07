@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="prompt-container">
-    <PageHeader title="Prompt配置" />>
+    <PageHeader title="Prompt配置" />
     <div class="main">
       <a-card :loading="loading">
         <a-form :model="form" layout="vertical">

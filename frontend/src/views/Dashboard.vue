@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="dashboard">
-    <PageHeader title="仪表盘" />>
+    <PageHeader title="仪表盘" />
     <div class="content">
       <div class="stat-cards">
         <div class="stat-card blue">

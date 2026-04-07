@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="admin-container">
-    <PageHeader title="上传招标文档" />>
+    <PageHeader title="上传招标文档" />
     <div class="main">
       <a-card>
         <div

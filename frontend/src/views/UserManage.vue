@@ -1,6 +1,6 @@
 ﻿<template>
   <div class="user-container">
-    <PageHeader title="用户管理" />>
+    <PageHeader title="用户管理" />
     <div class="main">
       <a-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" row-key="id" stripe>
         <template #index="{ rowIndex }">{{ rowIndex + 1 }}</template>
