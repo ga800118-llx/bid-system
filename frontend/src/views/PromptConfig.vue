@@ -9,20 +9,23 @@
             <a-input v-model="form.name" placeholder="例如：招标文档提取v2" />
           </a-form-item>
           <div class="section-title">System Prompt <span class="optional-tag">可选</span></div>
-          <a-form-item label="system">
-            <a-textarea v-model="form.system" :rows="4" style="width:100%" placeholder="可以写 AI 角色设定，为空则不发送 system 信息" />
-            <div class="tip">用于 MiniMax API 的 system 角色信息</div>
-          </a-form-item>
+          <div class="field-block">
+          <div class="field-label">system</div>
+          <a-textarea v-model="form.system" :rows="4" style="width:100%" placeholder="可以写 AI 角色设定，为空则不发送 system 信息" />
+          <div class="tip">用于 MiniMax API 的 system 角色信息</div>
+          </div>
           <div class="section-title">Prompt 内容 <span class="required-tag">必填</span></div>
-          <a-form-item label="content">
-            <a-textarea v-model="form.content" :rows="8" style="width:100%" placeholder="请包含 {content} 和 {field_def} 占位符的 Prompt 模板" />
-            <div class="tip">{content} 替换为 PDF 提取文字，{field_def} 替换为字段定义列表</div>
-          </a-form-item>
+          <div class="field-block">
+          <div class="field-label">content</div>
+          <a-textarea v-model="form.content" :rows="8" style="width:100%" placeholder="请包含 {content} 和 {field_def} 占位符的 Prompt 模板" />
+          <div class="tip">{content} 替换为 PDF 提取文字，{field_def} 替换为字段定义列表</div>
+          </div>
           <div class="section-title">字段定义 <span class="required-tag">必填</span></div>
-          <a-form-item label="fieldDef (JSON)">
-            <a-textarea v-model="fieldDefText" :rows="12" placeholder="field_def JSON 对象" style="width:100%;font-family:monospace" />
-            <div class="tip">用于 field_def JSON 模板</div>
-          </a-form-item>
+          <div class="field-block">
+          <div class="field-label">fieldDef (JSON)</div>
+          <a-textarea v-model="fieldDefText" :rows="12" placeholder="field_def JSON 对象" style="width:100%;font-family:monospace" />
+          <div class="tip">用于 field_def JSON 模板</div>
+          </div>
           <a-form-item>
             <a-button type="primary" @click="handleSave" :loading="saving">保存配置</a-button>
           </a-form-item>
@@ -81,4 +84,6 @@ onMounted(fetchTemplate)
 .header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
 .main { padding: 24px; max-width: 900px; margin: 0 auto; }
 .tip { display:block; margin-top:4px; color:#999; font-size:12px; clear:both; }
+.field-block { display:block; width:100%; margin-bottom:16px; }
+.field-label { font-size:14px; font-weight:500; color:#333; margin-bottom:8px; }
 </style>
