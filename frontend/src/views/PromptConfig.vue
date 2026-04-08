@@ -80,4 +80,5 @@ onMounted(fetchTemplate)
 .header { background: #fff; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
 .header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
 .main { padding: 24px; max-width: 900px; margin: 0 auto; }
+.tip { display:block; margin-top:4px; color:#999; font-size:12px; clear:both; }
 </style>
