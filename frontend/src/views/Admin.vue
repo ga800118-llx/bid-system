@@ -51,7 +51,7 @@
         <template #title>
           <div style="display:flex;justify-content:space-between;align-items:center">
             <span>最近上传</span>
-            <a-button type="text" size="small" @click="router.push("/projects")">查看全部</a-button>
+            <a-button type="text" size="small" @click="router.push('/projects')>查看全部</a-button>
           </div>
         </template>
         <a-table :columns="columns" :data="recentProjects" :loading="tableLoading" :pagination="false" row-key="id" stripe :selected-row-keys="selectedIds" @select="handleRowSelect" @select-all="handleSelectAll">
