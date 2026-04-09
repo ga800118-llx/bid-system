@@ -32,7 +32,7 @@
         </div>
         <div class="actions">
           <a-button type="primary" size="large" :loading="uploading" :disabled="!file" @click="handleUpload">上传智能提取</a-button>
-          <a-button size="large" @click="goHome">取消</a-button>
+          <a-button size="large" :disabled="!file" @click="handleCancel">取消</a-button>
         </div>
         <div v-if="uploading" class="progress-area">
           <div v-if="isExtracting" class="extracting-area">
@@ -201,6 +201,7 @@ const handleBatchDelete = async (done) => {
   done()
 }
 
+const handleCancel = () => { file.value = null; progressPercent.value = 0; isExtracting.value = false }
 const goHome = () => router.push("/")
 const goDetail = (id) => router.push("/project/" + id)
 

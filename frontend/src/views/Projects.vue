@@ -3,7 +3,7 @@
     <PageHeader title="项目列表" />
     <div class="main">
       <div class="toolbar">
-        <a-input-search v-model="keyword" placeholder="请输入项目名称搜索" style="width:300px" @search="handleSearch" allow-clear />
+        <a-input-search v-model="keyword" placeholder="请输入项目名称搜索" style="width:300px" @search="handleSearch" @press-enter="handleSearch" allow-clear />
         <a-button v-if="roleName == 'admin'" type="primary" @click="goAdmin">上传列表文件</a-button>
       </div>
       <a-table :columns="columns" :data="tableData" :loading="loading" :pagination="false" row-key="id" stripe>

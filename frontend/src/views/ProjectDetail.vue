@@ -21,8 +21,8 @@
           <a-descriptions-item label="质疑截止日期">{{ project.complaintDeadline ? project.complaintDeadline.replace('T',' ').substring(0,16) : '-' }}</a-descriptions-item>
           <a-descriptions-item label="拦标价（最高投标限价）">{{ project.ceilingPrice ? project.ceilingPrice + ' 元' : '-' }}</a-descriptions-item>
           <a-descriptions-item label="最低限价（成本警戒线）">{{ project.floorPrice ? project.floorPrice + ' 元' : '-' }}</a-descriptions-item>
-          <a-descriptions-item label="投标保证金">{{ project.bidBond ? project.bidBond + ' 元' : '-' }}</a-descriptions-item>
-          <a-descriptions-item label="履约保证金">{{ project.performanceBond ? project.performanceBond + ' 元' : '-' }}</a-descriptions-item>
+          <a-descriptions-item label="投标保证金">{{ project.bidBond || '-' }}</a-descriptions-item>
+          <a-descriptions-item label="履约保证金">{{ project.performanceBond || '-' }}</a-descriptions-item>
           <a-descriptions-item label="合同款项方式" :span="2">{{ project.contractPayment || '-' }}</a-descriptions-item>
           <a-descriptions-item label="专家点评构成" :span="2">{{ project.expertComposition || '-' }}</a-descriptions-item>
           <a-descriptions-item label="价格评分方法（评分办法）" :span="2">{{ project.priceScoreMethod || '-' }}</a-descriptions-item>

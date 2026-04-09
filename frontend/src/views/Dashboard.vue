@@ -76,9 +76,9 @@ function drawAgency(data) {
   chart.setOption({
     tooltip: { trigger: 'axis' },
     xAxis: { type: 'value' },
-    yAxis: { type: 'category', data: data.agencies.reverse() },
+    yAxis: { type: 'category', data: data.agencies.reverse(), axisLabel: { overflow: 'truncate', width: 130 } },
     series: [{ type: 'bar', data: data.counts.reverse(), itemStyle: { color: '#00B42A' }, barWidth: '50%' }],
-    grid: { left: 120, right: 20, top: 20, bottom: 30 }
+    grid: { left: 160, right: 20, top: 20, bottom: 30 }
   })
 }
 
