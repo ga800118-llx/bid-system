@@ -17,7 +17,12 @@
           <template #icon><IconUpload /></template>
           上传文件
         </a-menu-item>
-        <a-menu-item v-if="roleName == 'admin'" key="/user">
+        <div class="menu-divider" v-if="roleName == 'admin'">系统管理</div>
+        <a-menu-item v-if="roleName == 'admin'" key="/system/department">
+          <template #icon><IconApps /></template>
+          部门管理
+        </a-menu-item>
+        <a-menu-item v-if="roleName == 'admin'" key="/system/user">
           <template #icon><IconUser /></template>
           用户管理
         </a-menu-item>
@@ -40,7 +45,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { IconDashboard, IconFolder, IconUpload, IconUser, IconSettings, IconQuestion } from '@arco-design/web-vue/es/icon'
+import { IconDashboard, IconFolder, IconUpload, IconUser, IconSettings, IconQuestion, IconApps } from '@arco-design/web-vue/es/icon'
 
 const router = useRouter()
 const route = useRoute()
@@ -57,4 +62,5 @@ const onMenuClick = (key) => { router.push(key) }
 .sidebar-logo { height: 60px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .logo-text { color: #165DFF; font-size: 16px; font-weight: 600; letter-spacing: 1px; }
 .layout-main { flex: 1; overflow: auto; background: #f0f2f5; }
+.menu-divider { color: rgba(255,255,255,0.45); font-size: 12px; padding: 16px 16px 4px; margin-top: 4px; }
 </style>

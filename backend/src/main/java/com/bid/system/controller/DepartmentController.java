@@ -2,6 +2,7 @@ package com.bid.system.controller;
 
 import com.bid.system.dto.ApiResponse;
 import com.bid.system.service.DepartmentService;
+import com.bid.system.service.OrgUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
@@ -13,9 +14,17 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
+    @Autowired
+    private OrgUserService orgUserService;
+
     @GetMapping("/tree")
     public ApiResponse tree() {
         return ApiResponse.success(departmentService.getTree());
+    }
+
+    @GetMapping("/{id}/users")
+    public ApiResponse users(@PathVariable Long id, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+        return ApiResponse.success(orgUserService.getByDept(id, page, size));
     }
 
     @PostMapping

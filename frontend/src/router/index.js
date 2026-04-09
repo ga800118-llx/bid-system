@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/components/Layout.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
@@ -9,6 +9,7 @@ import ProjectDetail from '@/views/ProjectDetail.vue'
 import Admin from '@/views/Admin.vue'
 import UserManage from '@/views/UserManage.vue'
 import PromptConfig from '@/views/PromptConfig.vue'
+import Department from '@/views/Department.vue'
 import Help from '@/views/Help.vue'
 
 const routes = [
@@ -25,7 +26,8 @@ const routes = [
       { path: '/projects', name: 'Projects', component: Projects },
       { path: '/project/:id', name: 'ProjectDetail', component: ProjectDetail },
       { path: '/admin', name: 'Admin', component: Admin, meta: { requiresAdmin: true } },
-      { path: '/user', name: 'UserManage', component: UserManage, meta: { requiresAdmin: true } },
+      { path: '/system/department', name: 'Department', component: Department, meta: { requiresAdmin: true } },
+      { path: '/system/user', name: 'UserManage', component: UserManage, meta: { requiresAdmin: true } },
       { path: '/prompt', name: 'PromptConfig', component: PromptConfig, meta: { requiresAdmin: true } },
       { path: '/help', name: 'Help', component: Help }
     ]
