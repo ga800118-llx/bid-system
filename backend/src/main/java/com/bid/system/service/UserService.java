@@ -7,7 +7,7 @@ import com.bid.system.mapper.UserMapper;
 import com.bid.system.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -19,6 +19,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     public User register(String username, String password) {
         LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
         q.eq(User::getUsername, username);
@@ -27,8 +30,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
         User user = new User();
         user.setUsername(username);
-        user.setPassword(md5(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole("user");
+        user.setStatus(1);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         userMapper.insert(user);
@@ -37,9 +41,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     public String login(String username, String password) {
         LambdaQueryWrapper<User> q = new LambdaQueryWrapper<>();
-        q.eq(User::getUsername, username).eq(User::getPassword, md5(password));
+        q.eq(User::getUsername, username);
         User user = userMapper.selectOne(q);
-        if (user == null) return null;
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) { return null; }
+        user.setLastLoginAt(LocalDateTime.now());
+        userMapper.updateById(user);
         return JwtUtil.generateToken(user.getUsername(), user.getRole());
     }
 
@@ -58,7 +64,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public void updatePassword(Long id, String password) {
         User user = userMapper.selectById(id);
         if (user == null) throw new RuntimeException("用户不存在");
-        user.setPassword(md5(password));
+        user.setPassword(passwordEncoder.encode(password));
         user.setUpdatedAt(LocalDateTime.now());
         userMapper.updateById(user);
     }
@@ -69,7 +75,4 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userMapper.selectOne(q);
     }
 
-    private String md5(String input) {
-        return DigestUtils.md5DigestAsHex(input.getBytes());
-    }
 }
