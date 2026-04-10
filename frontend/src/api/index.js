@@ -53,7 +53,35 @@ export const projectApi = {
   downloadMarkdown: (id) => api.get('/api/project/download/' + id + '/markdown', { responseType: 'blob' }),
   delete: (id) => api.delete('/api/project/' + id),
   batchDelete: (ids) => api.post('/api/project/batch-delete', { ids: ids })
+,
+
+export const roleApi = {
+  list: () => api.get('/api/system/roles'),
+  add: (data) => api.post('/api/system/roles', data),
+  update: (id, data) => api.put('/api/system/roles/' + id, data),
+  delete: (id) => api.delete('/api/system/roles/' + id)
 }
 
+export const deptApi = {
+  tree: () => api.get('/api/system/departments/tree'),
+  users: (deptId, page, size) => api.get('/api/system/departments/' + deptId + '/users', { params: { page, size } }),
+  add: (data) => api.post('/api/system/departments', data),
+  update: (id, data) => api.put('/api/system/departments/' + id, data),
+  delete: (id) => api.delete('/api/system/departments/' + id)
+}}
+
+export const roleApi = {
+ list: () => api.get("/api/system/roles")
+ add: (data) => api.post("/api/system/roles", data)
+ update: (id, data) => api.put("/api/system/roles/"+ id, data)
+ delete: (id) => api.delete("/api/system/roles/"+ id)
+}
+export const deptApi = {
+ tree: () => api.get("/api/system/departments/tree")
+ users: (deptId, page, size) => api.get("/api/system/departments/"+ deptId+ "/users", { params: { page, size } })
+ add: (data) => api.post("/api/system/departments", data)
+ update: (id, data) => api.put("/api/system/departments/"+ id, data)
+ delete: (id) => api.delete("/api/system/departments/"+ id)
+}
 export default api
 
