@@ -15,16 +15,16 @@
           <div class="tree-container">
             <a-tree
               :data="treeData"
-              :selected-keys="selectedKeys"
+              node-key="id" :selected-keys="selectedKeys"
               :default-expand-all="true"
               @select="onTreeSelect"
               blockNode
             >
               <template #title="{ data }">
                 <div class="tree-node">
-                  <span class="node-name" :class="{ 'node-disabled': data.status === 0 }">
-                    {{ data.name }}
-                    <span v-if="data.status === 0" class="status-tag">禁用</span>
+                  <span class="node-name" :class="{ 'node-disabled': data?.status === 0 }">
+                    {{ data?.name }}
+                    <span v-if="data?.status === 0" class="status-tag">禁用</span>
                   </span>
                   <div class="node-actions" v-if="roleName == 'admin'" @click.stop>
                     <a-button type="text" size="mini" @click="openEditModal(data)"><IconEdit /></a-button>
@@ -140,7 +140,7 @@ const fetchTree = async () => {
       headers: { Authorization: 'Bearer ' + token }
     }).then(r => r.json())
     if (res.code === 200) {
-      treeData.value = res.data || []
+      treeData.value = (res.data || []).map(item => { id: item.id, name: item.name, status: item.status, sortOrder: item.sortOrder, parentId: item.parentId, children: (item.children || []).map(c => { id: c.id, name: c.name, status: c.status, sortOrder: c.sortOrder, parentId: c.parentId, children: c.children || [] }))})
     } else { Message.error(res.msg || '加载失败') }
   } catch { Message.error('加载部门树失败') }
 }
