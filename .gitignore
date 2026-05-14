@@ -16,6 +16,7 @@ frontend/*.log
 # Uploads (runtime data, not code)
 backend/uploads/
 backend/*.pdf
+backend/*.xlsx
 
 # IDE
 .idea/
@@ -34,3 +35,17 @@ mvnw.cmd
 
 # Logs
 *.log
+*.gz
+
+# Local runtime / temp
+.tools/
+backend/.local-db/
+uploads/
+.uuremote_*
+commit_msg.txt
+backend/mvn_err.txt
+backend.log
+C:/
+*_backup.sql
+*_backup_utf8.sql
+*_backup_utf8mb4.sql
