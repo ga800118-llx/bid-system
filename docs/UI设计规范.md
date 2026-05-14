@@ -1,40 +1,44 @@
 ﻿# UI 设计规范
 
 > 创建时间：2026-04-09
+> 更新时间：2026-05-14
 > 技术栈：Vue3 + Arco Design + CSS 变量
+
+> 注意：本文件保留通用视觉规范。后续后台页面开发的强约束以 `后台页面开发规范.md`、`UI组件库规范.md`、`业务组件复用规范.md`、`主题与暗黑模式规范.md` 和 `AGENTS.md` 为准。
 
 ---
 
 ## 一、颜色系统
 
-所有颜色统一使用 CSS 变量，不允许在业务代码中写死 HEX 值。
+所有颜色统一使用 CSS 变量，不允许在业务代码中写死 HEX 值。当前项目真实变量前缀为 `--ds-*`，定义位置为 `frontend/src/design-system/tokens/colors.css`。
 
 ### 1.1 语义色
 
-| 变量名 | 色值 | 用途 |
-|--------|------|------|
-| --color-primary | #1650ff | 主色：按钮、链接、选中态 |
-| --color-success | #00B42A | 成功：操作成功、通过状态 |
-| --color-warning | #FF7D00 | 警告：提示、异常状态 |
-| --color-danger | #F53F3F | 危险：删除、禁用、错误 |
-| --color-info | #0EA5E9 | 信息：辅助提示 |
+| 变量名 | 用途 |
+|--------|------|
+| --ds-color-primary | 主色：按钮、链接、选中态 |
+| --ds-color-success | 成功：操作成功、通过状态 |
+| --ds-color-warning | 警告：提示、异常状态 |
+| --ds-color-danger | 危险：删除、禁用、错误 |
+| --ds-color-info | 信息：辅助提示 |
 
 ### 1.2 中性色
 
-| 变量名 | 色值 | 用途 |
-|--------|------|------|
-| --color-text-primary | #1d1d1d | 标题、重要文字 |
-| --color-text-regular | #333333 | 正文 |
-| --color-text-secondary | #666666 | 辅助说明文字 |
-| --color-text-placeholder | #999999 | 占位文字、禁用态 |
-| --color-border | #e8e8e8 | 边框、分割线 |
-| --color-bg-page | #f0f2f5 | 页面背景 |
-| --color-bg-card | #ffffff | 卡片背景 |
-| --color-bg-hover | #f5f7fa | 悬停背景 |
+| 变量名 | 用途 |
+|--------|------|
+| --ds-color-text-primary | 标题、重要文字 |
+| --ds-color-text-regular | 正文 |
+| --ds-color-text-secondary | 辅助说明文字 |
+| --ds-color-text-placeholder | 占位文字、禁用态 |
+| --ds-color-border | 边框、分割线 |
+| --ds-color-bg-page | 页面背景 |
+| --ds-color-bg-card | 卡片、弹窗、表格背景 |
+| --ds-color-bg-hover | 悬停背景 |
+| --ds-color-bg-selected | 选中背景 |
 
 ### 1.3 暗黑模式
 
-> 换肤时只修改以上 CSS 变量值，不改动业务代码。
+> 换肤时只修改 `frontend/src/design-system/tokens` 中的 CSS 变量值，不改动业务代码。具体执行规则看 `主题与暗黑模式规范.md`。
 
 ---
 
@@ -208,7 +212,18 @@
 - 超长：XXX不能超过N个字符
 - 统一显示在输入框下方，红色 12px 文字
 
-### 7.5 API 示例
+### 7.5 执行要求
+
+- 后台页面不得直接使用原生 `a-input` 实现手机号、邮箱、身份证号、普通文本字段。
+- 普通文本必须使用 `DsInput type="text"`，并设置明确 `maxLength`。
+- 手机号必须使用 `DsInput type="phone"`。
+- 邮箱必须使用 `DsInput type="email"`。
+- 身份证号必须使用 `DsInput type="idCard"`。
+- 数字字段必须使用 `DsNumberInput`，金额字段必须使用 `DsAmountInput`。
+- 多行文本必须使用 `DsTextarea`，有长度限制时必须设置 `maxLength`。
+- 页面提交前校验必须复用 design-system 校验规则，不允许只做前端提示、不拦截保存。
+
+### 7.6 API 示例
 
 ```vue
 <FormInput
@@ -279,16 +294,34 @@
 ### 11.1 页面结构
 
 ```
-PageHeader（标题 + 用户信息）
+Layout（侧栏 + 顶部工作区 + 标签栏）
   └── Main Content（页面主体）
-        └── Card / List / Form
+        └── Toolbar / Table / Card / Form
 ```
 
-### 11.2 面包屑
+### 11.2 全局工作台
 
-- 系统管理页面统一显示面包屑导航
-- 格式：首页 / 系统管理 / 当前页面
-- 使用 PageHeader 统一组件
+- 后台页面必须挂在主 `Layout` 子路由下。
+- 顶部标题由路由 `meta.title` 统一提供。
+- 左侧栏支持展开/收起，收缩按钮位于侧栏顶部左侧，与菜单图标列对齐。
+- 顶部工作区显示当前页面标题、用户信息、退出按钮和多标签页。
+- 标签页按路由 `fullPath` 区分，仪表盘标签不可关闭。
+- `PageHeader` 仅保留兼容占位，新页面不要依赖它渲染页面头部。
+
+### 11.3 页面主体
+
+- 页面主体默认全宽自适应。
+- 禁止在后台页面默认使用 `max-width + margin: 0 auto`。
+- 页面主体统一使用 `padding: 24px`。
+- 列表页、管理页优先使用全宽表格布局。
+- 详情页和表单页如需限制阅读宽度，必须使用明确的业务类名，不能作为默认页面规则。
+
+### 11.4 工具栏
+
+- 搜索筛选区统一白底、`padding: 16px`、圆角 `8px`、底部间距 `16px`。
+- 筛选项使用 `a-space wrap` 或等价弹性布局，窄屏可自动换行。
+- 主操作按钮放在工具栏右侧。
+- 不使用行内宽度样式；输入框、选择器、日期选择器宽度使用 class 管理。
 
 ---
 
@@ -299,3 +332,4 @@ PageHeader（标题 + 用户信息）
 3. 表单统一使用 FormInput 系列组件
 4. 所有验证规则统一在组件层处理，不在各页面重复写校验逻辑
 5. 换暗黑模式只改 CSS 变量文件，不改动业务代码
+6. 新增后台页面必须遵守第十一章页面布局规范
