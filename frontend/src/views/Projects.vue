@@ -75,10 +75,10 @@ onMounted(fetchData)
 </script>
 
 <style scoped>
-.projects-page { min-height: 100vh; background: #f0f2f5; }
-.page-header { background: #fff; padding: 16px 24px; border-bottom: 1px solid #e8e8e8; }
-.page-header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
-.main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+.projects-page { min-height: 100vh; background: var(--ds-color-bg-page); }
+.page-header { background: var(--ds-color-bg-card); padding: 16px 24px; border-bottom: 1px solid var(--ds-color-border); }
+.page-header h2 { margin: 0; font-size: 18px; font-weight: 600; color: var(--ds-color-text-primary); }
+.main { padding: 24px; }
 .toolbar { display: flex; gap: 16px; margin-bottom: 16px; justify-content: space-between; }
 .pagination { margin-top: 16px; display: flex; justify-content: flex-end; }
 .name-cell { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }

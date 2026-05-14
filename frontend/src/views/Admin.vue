@@ -20,9 +20,9 @@
           />
           <div class="drag-icon">+</div>
           <div class="upload-text">
-            将文件<span style="color:#1650ff">拖到此处</span>，或<span style="color:#1650ff">点击选择</span>
+            将文件<span style="color:var(--ds-color-primary)">拖到此处</span>，或<span style="color:var(--ds-color-primary)">点击选择</span>
           </div>
-          <div style="color:#86909c;font-size:12px;margin-top:8px">支持 PDF、Word 文档，单个文件不超过100MB</div>
+          <div style="color:var(--ds-color-text-secondary);font-size:12px;margin-top:8px">支持 PDF、Word 文档，单个文件不超过100MB</div>
         </div>
         <div v-if="file" class="file-info">
           <span class="file-icon">📄</span>
@@ -89,7 +89,7 @@
           <div v-for="row in selectedRows.slice(0, 10)" :key="row.id" class="delete-item">
             {{ row.projectName }}
           </div>
-          <div v-if="selectedRows.length > 10" style="color:#999;font-size:12px;margin-top:6px">
+          <div v-if="selectedRows.length > 10" style="color:var(--ds-color-text-secondary);font-size:12px;margin-top:6px">
             还有 {{ selectedRows.length - 10 }} 项...
           </div>
         </div>
@@ -249,10 +249,10 @@ onMounted(fetchRecent)
 </script>
 
 <style scoped>
-.admin-container { min-height: 100vh; background: #f0f2f5; }
-.header { max-width: 1400px; margin: 0 auto 24px; background: #fff; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
-.header h2 { margin: 0; font-size: 18px; font-weight: 600; color: #1d1d1d; }
-.main { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+.admin-container { min-height: 100vh; background: var(--ds-color-bg-page); }
+.header { margin-bottom: 24px; background: var(--ds-color-bg-card); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+.header h2 { margin: 0; font-size: 18px; font-weight: 600; color: var(--ds-color-text-primary); }
+.main { padding: 24px; }
 .actions { margin-top: 24px; display: flex; gap: 12px; justify-content: center; }
 .progress-area { margin-top: 16px; }
 .extracting-area {
@@ -262,8 +262,8 @@ onMounted(fetchRecent)
 .extracting-icon {
   width: 48px;
   height: 48px;
-  border: 4px solid #e8e8e8;
-  border-top-color: #1650ff;
+  border: 4px solid var(--ds-color-border);
+  border-top-color: var(--ds-color-primary);
   border-radius: 50%;
   margin: 0 auto 16px;
   animation: spin 0.8s linear infinite;
@@ -274,12 +274,12 @@ onMounted(fetchRecent)
 .extracting-text {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--ds-color-text-primary);
   margin-bottom: 8px;
 }
 .extracting-sub {
   font-size: 13px;
-  color: #86909c;
+  color: var(--ds-color-text-secondary);
 }
 .extracting-area {
   text-align: center;
@@ -288,8 +288,8 @@ onMounted(fetchRecent)
 .extracting-icon {
   width: 48px;
   height: 48px;
-  border: 4px solid #e8e8e8;
-  border-top-color: #1650ff;
+  border: 4px solid var(--ds-color-border);
+  border-top-color: var(--ds-color-primary);
   border-radius: 50%;
   margin: 0 auto 16px;
   animation: spin 0.8s linear infinite;
@@ -300,37 +300,37 @@ onMounted(fetchRecent)
 .extracting-text {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--ds-color-text-primary);
   margin-bottom: 8px;
 }
 .extracting-sub {
   font-size: 13px;
-  color: #86909c;
+  color: var(--ds-color-text-secondary);
 }
 .name-cell { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
-.batch-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #eee; padding: 12px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 -2px 8px rgba(0,0,0,.1); z-index: 100; }
-.batch-info { color: #333; font-size: 14px; margin-right: auto; }
+.batch-action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--ds-color-bg-card); border-top: 1px solid var(--ds-color-border); padding: 12px 24px; display: flex; align-items: center; gap: 12px; box-shadow: 0 -2px 8px var(--ds-color-shadow-strong); z-index: 100; }
+.batch-info { color: var(--ds-color-text-primary); font-size: 14px; margin-right: auto; }
 .delete-list { max-height: 300px; overflow-y: auto; }
-.delete-item { padding: 4px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.delete-item { padding: 4px 0; border-bottom: 1px solid var(--ds-color-border); font-size: 13px; color: var(--ds-color-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .drag-zone {
-  border: 2px dashed #c0c4cc;
+  border: 2px dashed var(--ds-color-text-placeholder);
   border-radius: 6px;
   padding: 40px 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
-  background: #fafafa;
+  background: var(--ds-color-bg-soft);
 }
 .drag-zone:hover, .drag-zone.drag-over {
-  border-color: #1650ff;
-  background: #f0f5ff;
+  border-color: var(--ds-color-primary);
+  background: var(--ds-color-bg-selected);
 }
 .drag-zone.drag-over {
   border-style: solid;
 }
 .drag-icon {
   font-size: 48px;
-  color: #1650ff;
+  color: var(--ds-color-primary);
   line-height: 1;
   margin-bottom: 12px;
 }
@@ -339,13 +339,13 @@ onMounted(fetchRecent)
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background: #f0f5ff;
-  border: 1px solid #d9e0fd;
+  background: var(--ds-color-bg-selected);
+  border: 1px solid var(--ds-color-border-strong);
   border-radius: 6px;
   margin-top: 12px;
 }
 .file-icon { font-size: 20px; }
-.file-name { flex: 1; font-size: 14px; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.file-size { font-size: 12px; color: #86909c; }
-.upload-text { color: #4e5969; font-size: 14px; }
+.file-name { flex: 1; font-size: 14px; color: var(--ds-color-text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { font-size: 12px; color: var(--ds-color-text-secondary); }
+.upload-text { color: var(--ds-color-text-regular); font-size: 14px; }
 </style>

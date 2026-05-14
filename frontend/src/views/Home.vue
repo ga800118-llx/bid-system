@@ -1,7 +1,10 @@
 ﻿<template>
   <div class="home-container">
     <div class="header">
-      <div class="header-left"><h2>投标管理系统</h2></div>
+      <div class="header-left">
+        <h2>{{ systemTitle }}</h2>
+        <div class="header-subtitle">{{ enterpriseName }}</div>
+      </div>
       <div class="header-right">
         <span>欢迎，{{ username }}</span>
         <a-link v-if="role == 'admin'" @click="goUserManage">用户管理</a-link>
@@ -47,10 +50,13 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Message } from '@arco-design/web-vue'
 import { projectApi } from '@/api'
+import { DEFAULT_ENTERPRISE_NAME, DEFAULT_SYSTEM_TITLE, loadPublicSystemConfig } from '@/utils/systemConfig'
 
 const router = useRouter()
 const username = localStorage.getItem('username') || '用户'
 const role = localStorage.getItem('role') || 'user'
+const systemTitle = ref(DEFAULT_SYSTEM_TITLE)
+const enterpriseName = ref(DEFAULT_ENTERPRISE_NAME)
 const keyword = ref('')
 const page = ref(1)
 const size = ref(50)
@@ -83,14 +89,28 @@ const goUserManage = () => router.push('/user')
 const goPromptConfig = () => router.push('/prompt')
 const handleSearch = () => { page.value = 1; fetchData() }
 const handleLogout = () => { localStorage.clear(); router.push('/login') }
-onMounted(fetchData)
+
+const loadSystemTitle = async () => {
+  const config = await loadPublicSystemConfig()
+  systemTitle.value = config.systemTitle || DEFAULT_SYSTEM_TITLE
+  enterpriseName.value = config.enterpriseName || DEFAULT_ENTERPRISE_NAME
+  document.title = `首页 - ${systemTitle.value}`
+}
+
+onMounted(() => {
+  loadSystemTitle()
+  fetchData()
+})
 </script>
 
 <style scoped>
-.home-container { min-height: 100vh; background: #f0f2f5; }
-.header { background: #fff; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.home-container { min-height: 100vh; background: var(--ds-color-bg-page); }
+.header { background: var(--ds-color-bg-card); padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px var(--ds-color-shadow-strong); }
+.header-left { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.header-left h2 { margin: 0; font-size: 20px; line-height: 24px; }
+.header-subtitle { margin-top: 2px; color: var(--ds-color-text-secondary); font-size: 12px; line-height: 18px; }
 .header-right { display: flex; align-items: center; gap: 12px; }
-.main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+.main { padding: 24px; }
 .toolbar { display: flex; gap: 16px; margin-bottom: 16px; justify-content: space-between; }
 .pagination { margin-top: 16px; display: flex; justify-content: flex-end; }
 .name-cell { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }

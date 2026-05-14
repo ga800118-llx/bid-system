@@ -27,7 +27,7 @@
                 <a-link @click="openEditModal(record)">{{ record.label }}</a-link>
               </template>
               <template #key="{ record }">
-                <code style="font-size:12px;color:#666">{{ record.key }}</code>
+                <code style="font-size:12px;color:var(--ds-color-text-regular)">{{ record.key }}</code>
               </template>
               <template #semantic="{ record }">
                 <span class="semantic-text" :title="record.semantic" @click="openEditModal(record)">
@@ -98,7 +98,7 @@ const fetchTemplate = async () => {
   loading.value = true
   try {
     const token = localStorage.getItem("token")
-    const res = await fetch("/api/prompt", { headers: { Authorization: "Bearer " + token } }).then(r => r.json())
+    const res = await fetch(window.location.protocol + "//" + window.location.hostname + ":8080/api/prompt", { headers: { Authorization: "Bearer " + token } }).then(r => r.json())
     if (res.code === 200) {
       form.value.name = res.data.name || ""
       form.value.system = res.data.system || ""
@@ -115,7 +115,7 @@ const handleSave = async () => {
   saving.value = true
   try {
     const token = localStorage.getItem("token")
-    const res = await fetch("/api/prompt", {
+    const res = await fetch(window.location.protocol + "//" + window.location.hostname + ":8080/api/prompt", {
       method: "PUT",
       headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
       body: JSON.stringify({ name: form.value.name, system: form.value.system || "", content: form.value.content, fieldDef: JSON.stringify({ fields: fields.value }) })
@@ -130,15 +130,15 @@ onMounted(fetchTemplate)
 </script>
 
 <style scoped>
-.prompt-container { min-height: 100vh; background: #f0f2f5; }
-.main { padding: 24px; max-width: 900px; margin: 0 auto; }
-.section-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 12px; margin-top: 20px; }
+.prompt-container { min-height: 100vh; background: var(--ds-color-bg-page); }
+.main { padding: 24px; }
+.section-title { font-size: 15px; font-weight: 600; color: var(--ds-color-text-primary); margin-bottom: 12px; margin-top: 20px; }
 .field-block { display: block; width: 100%; margin-bottom: 16px; }
-.field-label { font-size: 14px; font-weight: 500; color: #333; margin-bottom: 8px; }
-.tip { display: block; margin-top: 4px; color: #999; font-size: 12px; }
-.field-list { border: 1px solid #e8e8e8; border-radius: 6px; overflow: hidden; }
-.semantic-text { cursor: pointer; color: #555; font-size: 13px; line-height: 1.5; }
-.semantic-text:hover { color: #1650ff; }
-.optional-tag { font-size: 11px; color: #999; font-weight: 400; margin-left: 6px; }
-.required-tag { font-size: 11px; color: #f53f3f; font-weight: 400; margin-left: 6px; }
+.field-label { font-size: 14px; font-weight: 500; color: var(--ds-color-text-primary); margin-bottom: 8px; }
+.tip { display: block; margin-top: 4px; color: var(--ds-color-text-secondary); font-size: 12px; }
+.field-list { border: 1px solid var(--ds-color-border); border-radius: 6px; overflow: hidden; }
+.semantic-text { cursor: pointer; color: var(--ds-color-text-regular); font-size: 13px; line-height: 1.5; }
+.semantic-text:hover { color: var(--ds-color-primary); }
+.optional-tag { font-size: 11px; color: var(--ds-color-text-secondary); font-weight: 400; margin-left: 6px; }
+.required-tag { font-size: 11px; color: var(--ds-color-danger); font-weight: 400; margin-left: 6px; }
 </style>

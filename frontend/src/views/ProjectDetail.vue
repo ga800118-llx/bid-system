@@ -1,5 +1,6 @@
 ﻿<template>
   <div class="detail-container">
+    <PageHeader title="项目详情" />
     <div class="header">
     <a-button @click="goBack">返回</a-button>
       <a-button v-if="userRole == 'admin'" status="danger" @click="handleDelete">删除项目</a-button>
@@ -117,14 +118,14 @@ onMounted(fetchDetail)
 </script>
 
 <style scoped>
-.detail-container { min-height: 100vh; background: #f0f2f5; padding: 24px; }
-.header { max-width: 900px; margin: 0 auto 16px; display: flex; justify-content: space-between; }
-.content { max-width: 900px; margin: 0 auto; }
+.detail-container { min-height: 100vh; background: var(--ds-color-bg-page); }
+.header { margin: 24px 24px 16px; display: flex; justify-content: space-between; }
+.content { margin: 0 24px 24px; }
 .card-title { display: flex; align-items: center; gap: 12px; }
 .card-title h2 { margin: 0; font-size: 16px; font-weight: 600; }
 .file-section { margin-top: 16px; }
-.file-section h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: #333; }
-.file-info-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f5f7fa; border-radius: 4px; }
+.file-section h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--ds-color-text-primary); }
+.file-info-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--ds-color-bg-soft); border-radius: 4px; }
 .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.stats-row { display: flex; align-items: center; gap: 24px; padding: 12px; background: #f0f9ff; border-radius: 4px; margin-top: 8px; font-size: 14px; color: #606266; }
+.stats-row { display: flex; align-items: center; gap: 24px; padding: 12px; background: var(--ds-color-tag-blue-bg); border-radius: 4px; margin-top: 8px; font-size: 14px; color: var(--ds-color-text-regular); }
 </style>
