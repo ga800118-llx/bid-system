@@ -1,0 +1,103 @@
+:root {
+  --ds-color-primary: #1650ff;
+  --ds-color-primary-hover: #3b6bff;
+  --ds-color-success: #00b42a;
+  --ds-color-warning: #ff7d00;
+  --ds-color-danger: #f53f3f;
+  --ds-color-info: #0ea5e9;
+
+  --ds-color-text-primary: #1d2129;
+  --ds-color-text-regular: #4e5969;
+  --ds-color-text-secondary: #86909c;
+  --ds-color-text-placeholder: #c9cdd4;
+
+  --ds-color-border: #e5e8ef;
+  --ds-color-border-strong: #d7dce5;
+  --ds-color-bg-page: #f2f3f5;
+  --ds-color-bg-card: #ffffff;
+  --ds-color-bg-soft: #f7f8fa;
+  --ds-color-bg-hover: #f2f6ff;
+  --ds-color-bg-selected: #e8f3ff;
+  --ds-color-bg-disabled: #f7f8fa;
+
+  --ds-color-tag-blue-bg: #e8f3ff;
+  --ds-color-tag-blue-text: #165dff;
+  --ds-color-tag-green-bg: #e8ffea;
+  --ds-color-tag-green-text: #00b42a;
+  --ds-color-tag-orange-bg: #fff7e8;
+  --ds-color-tag-orange-text: #ff7d00;
+  --ds-color-tag-red-bg: #ffece8;
+  --ds-color-tag-red-text: #f53f3f;
+  --ds-color-tag-purple-bg: #f5f3ff;
+  --ds-color-tag-purple-text: #722ed1;
+
+  --ds-color-bg-layout: #f2f4f8;
+  --ds-color-bg-layout-start: #f6f8fc;
+  --ds-color-bg-layout-mid: #f3f5f9;
+  --ds-color-bg-elevated: #ffffff;
+  --ds-color-bg-overlay: rgba(255, 255, 255, 0.92);
+  --ds-color-bg-sidebar: #1e1e1e;
+  --ds-color-sidebar-border: rgba(255, 255, 255, 0.1);
+  --ds-color-sidebar-text: color-mix(in srgb, var(--ds-color-bg-card) 72%, transparent);
+  --ds-color-sidebar-text-muted: rgba(255, 255, 255, 0.45);
+  --ds-color-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --ds-color-inverse-text: #ffffff;
+  --ds-color-shadow: var(--ds-color-shadow);
+  --ds-color-shadow-strong: rgba(15, 35, 95, 0.16);
+  --ds-color-watermark: 29, 33, 41;
+  --ds-color-chart-axis: #d9dee8;
+  --ds-color-chart-grid: #eef1f6;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ds-color-primary: #5f86ff;
+  --ds-color-primary-hover: #7b9aff;
+  --ds-color-success: #35c967;
+  --ds-color-warning: #ff9a2e;
+  --ds-color-danger: #ff6b6b;
+  --ds-color-info: #38bdf8;
+
+  --ds-color-text-primary: #eef3ff;
+  --ds-color-text-regular: #c6cedd;
+  --ds-color-text-secondary: #8f9aaf;
+  --ds-color-text-placeholder: #657087;
+
+  --ds-color-border: #293447;
+  --ds-color-border-strong: #3a465c;
+  --ds-color-bg-page: #101722;
+  --ds-color-bg-card: #151e2b;
+  --ds-color-bg-soft: #1b2635;
+  --ds-color-bg-hover: #202d40;
+  --ds-color-bg-selected: #1f3354;
+  --ds-color-bg-disabled: #17202d;
+
+  --ds-color-tag-blue-bg: #172b4d;
+  --ds-color-tag-blue-text: #8fb0ff;
+  --ds-color-tag-green-bg: #11351f;
+  --ds-color-tag-green-text: #71df95;
+  --ds-color-tag-orange-bg: #3b2813;
+  --ds-color-tag-orange-text: #ffc078;
+  --ds-color-tag-red-bg: #3f1d22;
+  --ds-color-tag-red-text: #ff9b9b;
+  --ds-color-tag-purple-bg: #2b2345;
+  --ds-color-tag-purple-text: #c8b6ff;
+
+  --ds-color-bg-layout: #0f1622;
+  --ds-color-bg-layout-start: #141e2c;
+  --ds-color-bg-layout-mid: #111a27;
+  --ds-color-bg-elevated: #1a2433;
+  --ds-color-bg-overlay: rgba(18, 27, 40, 0.92);
+  --ds-color-bg-sidebar: #0b111b;
+  --ds-color-sidebar-border: rgba(255, 255, 255, 0.08);
+  --ds-color-sidebar-text: rgba(238, 243, 255, 0.74);
+  --ds-color-sidebar-text-muted: rgba(238, 243, 255, 0.45);
+  --ds-color-sidebar-hover: rgba(255, 255, 255, 0.1);
+  --ds-color-inverse-text: #ffffff;
+  --ds-color-shadow: rgba(0, 0, 0, 0.32);
+  --ds-color-shadow-strong: rgba(0, 0, 0, 0.46);
+  --ds-color-watermark: 238, 243, 255;
+  --ds-color-chart-axis: #3a465c;
+  --ds-color-chart-grid: #273246;
+}

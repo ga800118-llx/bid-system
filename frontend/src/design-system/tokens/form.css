@@ -1,0 +1,91 @@
+:root {
+  --ds-control-height: 36px;
+  --ds-control-height-lg: 40px;
+  --ds-control-radius: var(--ds-radius-sm);
+  --ds-control-border: var(--ds-color-border);
+  --ds-control-border-hover: var(--ds-color-border-strong);
+  --ds-control-border-focus: var(--ds-color-primary);
+  --ds-control-bg: var(--ds-color-bg-card);
+  --ds-control-bg-disabled: var(--ds-color-bg-disabled);
+  --ds-control-text: var(--ds-color-text-primary);
+  --ds-control-placeholder: var(--ds-color-text-placeholder);
+  --ds-form-label-color: var(--ds-color-text-regular);
+  --ds-form-error-color: var(--ds-color-danger);
+  --ds-form-error-size: 12px;
+}
+
+.ds-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ds-field__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ds-form-label-color);
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.ds-field__required {
+  color: var(--ds-color-danger);
+}
+
+.ds-field__hint,
+.ds-field__error {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ds-field__hint {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-field__error {
+  color: var(--ds-form-error-color);
+}
+
+.ds-control :where(.arco-input-wrapper, .arco-select-view, .arco-picker, .arco-textarea-wrapper, .arco-input-number, .arco-input-number-mode-button) {
+  border-radius: var(--ds-control-radius);
+  border-color: var(--ds-control-border);
+  background: var(--ds-control-bg);
+  box-shadow: none;
+}
+
+.ds-control :where(.arco-input-wrapper, .arco-select-view, .arco-picker, .arco-input-number) {
+  height: var(--ds-control-height);
+}
+
+.ds-control :where(.arco-input-wrapper:hover, .arco-select-view:hover, .arco-picker:hover, .arco-textarea-wrapper:hover, .arco-input-number:hover) {
+  border-color: var(--ds-control-border-hover);
+  background: var(--ds-color-bg-hover);
+}
+
+.ds-control :where(.arco-input-wrapper.arco-input-focus, .arco-select-view.arco-select-view-focus, .arco-picker.arco-picker-focused, .arco-textarea-focus, .arco-input-number-focus) {
+  border-color: var(--ds-control-border-focus);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ds-color-primary) 10%, transparent);
+}
+
+.ds-control :where(.arco-input, .arco-textarea, .arco-select-view-value, .arco-picker-input input, .arco-input-number-input) {
+  color: var(--ds-control-text);
+}
+
+.ds-control :where(.arco-input::placeholder, .arco-textarea::placeholder, .arco-picker-input input::placeholder) {
+  color: var(--ds-control-placeholder);
+}
+
+.ds-control :where(.arco-input-wrapper.arco-input-disabled, .arco-select-view-disabled, .arco-picker-disabled, .arco-textarea-disabled, .arco-input-number-disabled) {
+  background: var(--ds-control-bg-disabled);
+  color: var(--ds-color-text-placeholder);
+}
+
+.ds-card {
+  background: var(--ds-color-bg-card);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-sm);
+  box-shadow: var(--ds-shadow-card);
+}

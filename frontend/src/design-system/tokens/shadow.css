@@ -1,0 +1,5 @@
+:root {
+  --ds-shadow-card: 0 8px 22px var(--ds-color-shadow);
+  --ds-shadow-dropdown: 0 8px 20px var(--ds-color-shadow-strong);
+  --ds-shadow-modal: 0 12px 28px var(--ds-color-shadow-strong);
+}
