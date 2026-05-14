@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 @TableName("org_role")
 public class Role {
   private Long id;
+  private String roleCode;
   private String roleName;
   private String description;
   private Integer status;
@@ -14,6 +15,8 @@ public class Role {
 
   public Long getId() { return id; }
   public void setId(Long id) { this.id = id; }
+  public String getRoleCode() { return roleCode; }
+  public void setRoleCode(String roleCode) { this.roleCode = roleCode; }
   public String getRoleName() { return roleName; }
   public void setRoleName(String roleName) { this.roleName = roleName; }
   public String getDescription() { return description; }

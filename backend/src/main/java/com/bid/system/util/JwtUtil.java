@@ -17,6 +17,24 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
+    public static String generateToken(Long userId, String username) {
+        return generateToken(userId, username, EXPIRATION);
+    }
+
+    public static String generateToken(Long userId, String username, long expirationMillis) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+        claims.put("username", username);
+        long safeExpiration = expirationMillis <= 0 ? EXPIRATION : expirationMillis;
+        return Jwts.builder()
+                .claims(claims)
+                .subject(String.valueOf(userId))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + safeExpiration))
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     public static String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
@@ -38,11 +56,29 @@ public class JwtUtil {
     }
 
     public static String getUsername(String token) {
-        return parseToken(token).getSubject();
+        Claims claims = parseToken(token);
+        Object username = claims.get("username");
+        return username == null ? claims.getSubject() : String.valueOf(username);
     }
 
     public static String getRole(String token) {
         return (String) parseToken(token).get("role");
+    }
+
+    public static Long getUserId(String token) {
+        Claims claims = parseToken(token);
+        Object userId = claims.get("userId");
+        if (userId instanceof Number) {
+            return ((Number) userId).longValue();
+        }
+        if (userId != null) {
+            return Long.valueOf(String.valueOf(userId));
+        }
+        String subject = claims.getSubject();
+        if (subject != null && subject.matches("\\d+")) {
+            return Long.valueOf(subject);
+        }
+        return null;
     }
 
     public static boolean isTokenExpired(String token) {

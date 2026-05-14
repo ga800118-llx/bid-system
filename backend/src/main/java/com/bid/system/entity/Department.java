@@ -8,6 +8,8 @@ public class Department {
     private Long id;
     private String name;
     private Long parentId;
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private Long managerUserId;
     private Integer sortOrder;
     private Integer status;
     private LocalDateTime createdAt;
@@ -19,6 +21,8 @@ public class Department {
     public void setName(String name) { this.name = name; }
     public Long getParentId() { return parentId; }
     public void setParentId(Long parentId) { this.parentId = parentId; }
+    public Long getManagerUserId() { return managerUserId; }
+    public void setManagerUserId(Long managerUserId) { this.managerUserId = managerUserId; }
     public Integer getSortOrder() { return sortOrder; }
     public void setSortOrder(Integer sortOrder) { this.sortOrder = sortOrder; }
     public Integer getStatus() { return status; }

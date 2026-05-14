@@ -29,6 +29,12 @@ public class MiniMaxTextExtractService {
     @Value("${app.pdf-extract.script:C:/UPQQ/pdf_extract.py}")
     private String pdfExtractScript;
 
+    @Value("${app.pdf-extract.python-command:python3}")
+    private String pythonCommand;
+
+    @Value("${app.pdf-extract.python-path:.tools/python-packages}")
+    private String pythonPath;
+
     @Value("${app.minimax.max-text-length:250000}")
     private int maxTextLength;
 
@@ -42,9 +48,17 @@ public class MiniMaxTextExtractService {
             .build();
 
     public Map<String, Object> extractTextFromPdf(String filePath) throws Exception {
-        ProcessBuilder pb = new ProcessBuilder("python", "-X", "utf8", pdfExtractScript, filePath);
+        ProcessBuilder pb = new ProcessBuilder(pythonCommand, "-X", "utf8", pdfExtractScript, filePath);
+        if (pythonPath != null && !pythonPath.isBlank()) {
+            pb.environment().put("PYTHONPATH", pythonPath);
+        }
         pb.redirectErrorStream(true);
-        Process process = pb.start();
+        Process process;
+        try {
+            process = pb.start();
+        } catch (IOException e) {
+            throw new RuntimeException("PDF提取脚本启动失败，请确认 Python 命令可用: " + pythonCommand, e);
+        }
 
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
@@ -62,7 +76,7 @@ public class MiniMaxTextExtractService {
         }
         int exitCode = process.exitValue();
         if (exitCode != 0) {
-            throw new RuntimeException("PDF提取脚本执行失败，退出码: " + exitCode);
+            throw new RuntimeException("PDF提取脚本执行失败，退出码: " + exitCode + "，输出: " + output);
         }
 
         String result = output.toString();
@@ -143,13 +157,19 @@ public class MiniMaxTextExtractService {
             : "";
 
         content = content.trim();
-        if (content.startsWith("`json")) {
-            content = content.substring(7);
-        } else if (content.startsWith("\"") && content.length() > 3) {
-            content = content.substring(3);
+        if (content.startsWith("```")) {
+            int firstLineEnd = content.indexOf('\n');
+            if (firstLineEnd >= 0) {
+                content = content.substring(firstLineEnd + 1);
+            }
+            if (content.endsWith("```")) {
+                content = content.substring(0, content.length() - 3);
+            }
         }
-        if (content.endsWith("\"")) {
-            content = content.substring(0, content.length() - 3);
+        int jsonStart = content.indexOf('{');
+        int jsonEnd = content.lastIndexOf('}');
+        if (jsonStart >= 0 && jsonEnd > jsonStart) {
+            content = content.substring(jsonStart, jsonEnd + 1);
         }
         content = content.trim();
 

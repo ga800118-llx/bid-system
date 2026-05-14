@@ -34,6 +34,8 @@ app:
     max-text-length: 250000
   pdf-extract:
     script: C:/UPQQ/pdf_extract.py
+    python-command: python3
+    python-path: .tools/python-packages
   prompt-template:
     path: C:/UPQQ/prompt_template.json
 

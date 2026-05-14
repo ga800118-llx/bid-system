@@ -35,6 +35,9 @@ public class ProjectService extends ServiceImpl<ProjectMapper, Project> {
 
     private BigDecimal parseMoney(Object val) {
         if (val == null) return null;
+        if (val instanceof Number) {
+            try { return BigDecimal.valueOf(((Number) val).doubleValue()); } catch (Exception e) { return null; }
+        }
         String s = String.valueOf(val).replaceAll("[^0-9.]", "");
         try { return new BigDecimal(s); } catch (Exception e) { return null; }
     }
